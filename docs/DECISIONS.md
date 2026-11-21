@@ -54,3 +54,26 @@ Short records of choices made while building Lafaz. Newest last. Each one says w
 - Why: a single small process is enough for a judged demo, and a clean archive guarantees that ignored files (keys,
   state, notes) never reach the image.
 - Undo: `deploy/deploy.sh --rollback` runs the previous image, which a stopped `lafaz-undo` container holds.
+
+## D7. Listen layer: the model proposes, code decides (21 Nov, 16:55 MYT)
+
+- What: one Messages API call with the strict `record_items` tool (schema in `config/tools.json`), then code in
+  `lafaz/listen/` checks everything the model returned:
+  - Quotes: spaces, case and typographic quote marks are normalised; each quote must be a substring of the input and at
+    least `min_quote_words` words (`config/listen.json`). A correction counts only when both quotes exist and the old one
+    comes first. A failing item is rejected and stored with its reason code (`items.status = 'rejected'`).
+  - Owners: a named owner must match exactly one known person by full name, first name or alias. An action with no
+    named owner belongs to the speaker only when the quote is in the first person ("I'll", "saya"). Anything else is a
+    question.
+  - Dates: the model returns the deadline words, never a date. Code resolves them from the meeting date with the word
+    lists in `config/listen.json`. A plain weekday is the next one after the meeting; "next Friday" and "Jumaat depan"
+    mean that weekday in the following Monday-to-Sunday week. Vague words ("soon", "next week") and impossible dates
+    become a question.
+  - Questions written by code are stored as a code plus parameters and shown through `question.*` keys in the
+    interface text files, so they appear in English or Malay.
+- Request shape follows D3: `tool_choice: auto`, `strict: true`, effort and model from config, server-side fallback,
+  `stop_reason` checked before content. Cost is estimated from `config/prices.json`; an unknown model costs 0 rather
+  than a guessed number.
+- Why: a quote that code can find in the input is the proof a judge can check. Dates and owners decided by code are
+  repeatable and testable without a model.
+- Undo: `lafaz/listen/` is self-contained; the word lists and the minimum quote length are config.

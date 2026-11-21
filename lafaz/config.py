@@ -35,6 +35,28 @@ def samples() -> list[dict]:
 
 
 @lru_cache(maxsize=None)
+def listen() -> dict:
+    return _read("listen.json")
+
+
+@lru_cache(maxsize=None)
+def prices() -> dict:
+    return _read("prices.json")
+
+
+def tool(name: str) -> dict:
+    for entry in tools():
+        if entry["name"] == name:
+            return entry
+    raise KeyError(name)
+
+
+@lru_cache(maxsize=None)
+def prompt(name: str) -> str:
+    return (REPO_ROOT / "prompts" / f"{name}.md").read_text(encoding="utf-8")
+
+
+@lru_cache(maxsize=None)
 def messages(lang: str) -> dict[str, str]:
     return _read(f"i18n/{lang}.json")
 
@@ -46,5 +68,5 @@ def db_path() -> Path:
 
 
 def clear_cache() -> None:
-    for fn in (settings, tools, samples, messages):
+    for fn in (settings, tools, samples, messages, listen, prices, prompt):
         fn.cache_clear()

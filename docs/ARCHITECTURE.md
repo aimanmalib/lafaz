@@ -16,8 +16,8 @@ browser ──HTML/HTMX──> FastAPI (lafaz/app.py)
 |---|---|---|
 | Pages, language switch, health check | `lafaz/app.py`, `templates/` | built |
 | Config and interface text | `lafaz/config.py`, `lafaz/i18n.py` | built |
-| Storage | `lafaz/db.py`, `lafaz/schema.sql` | built (meetings, runs, steps) |
-| Listen: quotes checked by code | `lafaz/listen` | next |
+| Storage | `lafaz/db.py`, `lafaz/schema.sql` | built (meetings, runs, steps, items, questions) |
+| Listen: quotes, owners and dates checked by code | `lafaz/listen/`, `lafaz/llm.py`, `prompts/listen.md` | built |
 | Agent loop with approval gate | `lafaz/agent` | planned |
 | Memory and conflicts | `lafaz/memory` | planned |
 | Email, calendar feed, board | `lafaz/integrations` | planned |
@@ -31,7 +31,7 @@ The full required item map is in `docs/KEPUTUSAN-KICKOFF.md`.
 2. **Product-grade interface.** `docs/DESIGN.md` sets the tokens, type and layout. Pages are checked in WebKit at iPhone 13 size
    and at 320 px wide.
 3. **Change without touching code.** Model, limits, budget, rung, timezone, tool categories and samples are in `config/*.json`.
-   Prompts will live in `prompts/*.md` and eval tasks in `evals/tasks/*.json`. Code reads them; code does not hold them.
+   Prompts live in `prompts/*.md`; eval tasks will live in `evals/tasks/*.json`. Code reads them; code does not hold them.
 4. **Small modules, recorded choices, a way back.** Every source file stays under 400 lines. Choices are in `docs/DECISIONS.md`.
    A deploy can be rolled back to the previous image with one command.
 
@@ -40,4 +40,4 @@ The full required item map is in `docs/KEPUTUSAN-KICKOFF.md`.
 | Variable | Default | Meaning |
 |---|---|---|
 | `LAFAZ_DB` | `state/lafaz.db` | SQLite file. In the container it points into the `lafaz-data` volume. |
-| `LAFAZ_CONFIG_DIR` | `config/` | Folder with `lafaz.json`, `tools.json`, `samples.json`, `i18n/`. |
+| `LAFAZ_CONFIG_DIR` | `config/` | Folder with `lafaz.json`, `tools.json`, `samples.json`, `listen.json`, `prices.json`, `i18n/`. |

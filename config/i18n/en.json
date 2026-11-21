@@ -23,5 +23,8 @@
   "footer.disclosure": "Built during NextGen AI Hackathon, 21 Nov 2026, by one person directing AI coding agents.",
   "footer.source": "Source code",
   "error.not_found": "This page does not exist.",
-  "error.back": "Back to dictation"
+  "error.back": "Back to dictation",
+  "question.owner_missing": "Who will do this: {item}?",
+  "question.owner_unmatched": "Nobody called \"{name}\" is known yet. Who is this?",
+  "question.due_unclear": "Which date is \"{phrase}\"?"
 }

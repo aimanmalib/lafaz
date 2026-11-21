@@ -23,5 +23,8 @@
   "footer.disclosure": "Dibina semasa NextGen AI Hackathon, 21 Nov 2026, oleh seorang yang mengarahkan ejen pengekodan AI.",
   "footer.source": "Kod sumber",
   "error.not_found": "Halaman ini tidak wujud.",
-  "error.back": "Kembali ke dikte"
+  "error.back": "Kembali ke dikte",
+  "question.owner_missing": "Siapa akan buat ini: {item}?",
+  "question.owner_unmatched": "Belum ada sesiapa bernama \"{name}\" dalam rekod. Siapa orang ini?",
+  "question.due_unclear": "Tarikh manakah \"{phrase}\"?"
 }

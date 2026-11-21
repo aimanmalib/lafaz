@@ -31,3 +31,35 @@ CREATE TABLE IF NOT EXISTS steps (
     cost_usd REAL,
     UNIQUE (run_id, seq)
 );
+
+-- Listen layer (B1). Rejected items are kept with their reason so the measured counts come from the database.
+CREATE TABLE IF NOT EXISTS items (
+    id INTEGER PRIMARY KEY,
+    run_id INTEGER NOT NULL REFERENCES runs(id),
+    seq INTEGER NOT NULL,
+    status TEXT NOT NULL CHECK (status IN ('accepted', 'rejected')),
+    reason TEXT,
+    kind TEXT,
+    text TEXT,
+    owner TEXT,
+    speaker TEXT,
+    due_phrase TEXT,
+    due_date TEXT,
+    confidence TEXT,
+    quotes_json TEXT NOT NULL DEFAULT '[]',
+    corrects_json TEXT,
+    UNIQUE (run_id, seq)
+);
+
+CREATE TABLE IF NOT EXISTS questions (
+    id INTEGER PRIMARY KEY,
+    run_id INTEGER NOT NULL REFERENCES runs(id),
+    seq INTEGER NOT NULL,
+    origin TEXT NOT NULL CHECK (origin IN ('model', 'code')),
+    code TEXT,
+    params_json TEXT,
+    text TEXT,
+    item_seq INTEGER,
+    quote TEXT,
+    UNIQUE (run_id, seq)
+);

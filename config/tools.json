@@ -1,21 +1,174 @@
 {
   "_note": "Single source of truth for what each tool may do. The agent loop reads 'kategori' (permission category); nothing in code hard-codes it.",
   "tools": [
-    {"name": "record_items", "kategori": "read", "enabled": true,
-     "description": "Record decisions, action items, questions and facts heard in the input, each with exact quotes."},
-    {"name": "judge_conflict", "kategori": "read", "enabled": true,
-     "description": "Decide whether a new decision contradicts an earlier active decision, quoting both."},
-    {"name": "create_task", "kategori": "reversible", "enabled": true,
-     "description": "Create a task on the internal board in the To do column. Can be undone."},
-    {"name": "preview_summary", "kategori": "reversible", "enabled": true,
-     "description": "Draft the weekly digest for one person. Nothing is sent."},
-    {"name": "publish_to_board", "kategori": "irreversible", "enabled": true,
-     "description": "Publish tasks to the shared team board where others see them."},
-    {"name": "send_reminder", "kategori": "irreversible", "enabled": true,
-     "description": "Email a reminder to the task owner before the deadline."},
-    {"name": "send_summary", "kategori": "irreversible", "enabled": true,
-     "description": "Email the weekly digest to one person."},
-    {"name": "ask_team", "kategori": "irreversible", "enabled": true,
-     "description": "Email the team to resolve a conflict between two decisions."}
+    {
+      "name": "record_items",
+      "kategori": "read",
+      "enabled": true,
+      "description": "Record decisions, action items, questions and facts heard in the input, each with exact quotes.",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "items",
+          "questions"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "text",
+                "owner",
+                "due_phrase",
+                "quotes",
+                "corrects",
+                "confidence"
+              ],
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "decision",
+                    "action",
+                    "question",
+                    "fact"
+                  ]
+                },
+                "text": {
+                  "type": "string",
+                  "description": "The item in plain words, in the language of the input."
+                },
+                "owner": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "Name as spoken, or null if nobody was named. Do not guess."
+                },
+                "due_phrase": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "The deadline words exactly as spoken (for example 'by Wednesday', 'lusa'), or null. Never a computed date."
+                },
+                "quotes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "One or more exact spans copied from the input, each at least three words."
+                },
+                "corrects": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "old_quote",
+                        "new_quote"
+                      ],
+                      "properties": {
+                        "old_quote": {
+                          "type": "string"
+                        },
+                        "new_quote": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "When the speaker corrected themselves: the earlier words and the words that replace them, both copied exactly."
+                },
+                "confidence": {
+                  "type": "string",
+                  "enum": [
+                    "high",
+                    "medium",
+                    "low"
+                  ]
+                }
+              }
+            }
+          },
+          "questions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "item_index",
+                "question",
+                "quote"
+              ],
+              "properties": {
+                "item_index": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "question": {
+                  "type": "string"
+                },
+                "quote": {
+                  "type": "string",
+                  "description": "Exact span from the input that raised the question."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "judge_conflict",
+      "kategori": "read",
+      "enabled": true,
+      "description": "Decide whether a new decision contradicts an earlier active decision, quoting both."
+    },
+    {
+      "name": "create_task",
+      "kategori": "reversible",
+      "enabled": true,
+      "description": "Create a task on the internal board in the To do column. Can be undone."
+    },
+    {
+      "name": "preview_summary",
+      "kategori": "reversible",
+      "enabled": true,
+      "description": "Draft the weekly digest for one person. Nothing is sent."
+    },
+    {
+      "name": "publish_to_board",
+      "kategori": "irreversible",
+      "enabled": true,
+      "description": "Publish tasks to the shared team board where others see them."
+    },
+    {
+      "name": "send_reminder",
+      "kategori": "irreversible",
+      "enabled": true,
+      "description": "Email a reminder to the task owner before the deadline."
+    },
+    {
+      "name": "send_summary",
+      "kategori": "irreversible",
+      "enabled": true,
+      "description": "Email the weekly digest to one person."
+    },
+    {
+      "name": "ask_team",
+      "kategori": "irreversible",
+      "enabled": true,
+      "description": "Email the team to resolve a conflict between two decisions."
+    }
   ]
 }
