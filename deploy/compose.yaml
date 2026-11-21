@@ -1,0 +1,33 @@
+# Lafaz: one container behind the host's reverse proxy. No published port.
+# Run through deploy/deploy.sh, which sources deploy/hos.env (host values, not tracked) first.
+name: lafaz
+services:
+  lafaz:
+    image: lafaz:${LAFAZ_TAG:-latest}
+    container_name: lafaz
+    restart: unless-stopped
+    # Keys (Anthropic, SMTP) reach the container as environment only: never the image, never the repo.
+    # Without the file the app runs its public replay mode.
+    env_file:
+      - path: ${LAFAZ_ENV_FILE:-lafaz.env}
+        required: false
+    environment:
+      LAFAZ_DB: /app/data/lafaz.db
+      TZ: UTC
+    volumes:
+      - lafaz-data:/app/data
+    read_only: true
+    tmpfs: [/tmp]
+    cpus: 0.75
+    mem_limit: 384m
+    networks: [proxy]
+
+volumes:
+  lafaz-data:
+    name: lafaz-data
+    external: true
+
+networks:
+  proxy:
+    name: ${LAFAZ_NETWORK:?set LAFAZ_NETWORK in deploy/hos.env}
+    external: true

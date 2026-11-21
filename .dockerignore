@@ -1,0 +1,28 @@
+# Keys, state and local data never enter the build context.
+.env
+.env.*
+!.env.example
+state/
+data/
+dalaman/
+*.db
+*.db-*
+deploy/hos.env
+deploy/*_TAG
+# Not needed at run time.
+.git
+.depot
+.pagar
+.venv
+.pytest_cache
+__pycache__
+docs
+tests
+evals/results
+demo
+*.log
+deploy
+scripts
+.github
+Dockerfile
+.dockerignore
