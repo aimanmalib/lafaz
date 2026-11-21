@@ -67,3 +67,22 @@ def test_correction_with_invented_old_words_is_rejected():
         "corrects": {"old_quote": "beta goes out in January", "new_quote": "move the beta to the 5th"},
     }
     assert checker().check_item(item).reason == "correction_quote_not_found"
+
+
+def test_a_short_supporting_quote_is_dropped_when_a_full_quote_stands():
+    from datetime import date
+
+    from lafaz.listen.extract import check
+
+    item = {"kind": "decision", "text": "Beta moves to 5 December", "owner": None, "due_phrase": None,
+            "quotes": ["let's move the beta to the 5th of December", "actually, no"], "corrects": None,
+            "confidence": "high"}
+    result = check({"items": [item], "questions": []}, TEXT, date(2026, 11, 21), [])
+    assert [i["quotes"] for i in result.items] == [["let's move the beta to the 5th of December"]]
+    assert result.rejected == []
+
+
+def test_an_item_with_only_short_quotes_is_still_rejected():
+    item = {"quotes": ["actually, no"]}
+    assert checker().drop_short(item) is item
+    assert checker().check_item(item).reason == "quote_too_short"

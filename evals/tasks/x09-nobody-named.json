@@ -1,0 +1,35 @@
+{
+  "id": "x09-nobody-named",
+  "category": "extraction",
+  "source": "synthetic",
+  "label": "A task with nobody named becomes a question",
+  "meeting_date": "2026-11-21",
+  "text": "Aina: Someone needs to renew the company domain before it expires on Friday.\nFaris: Right, and we should not let that slip again.",
+  "memory": {
+    "people": [
+      {
+        "name": "Aina",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Faris",
+        "aliases": [],
+        "email": null
+      }
+    ],
+    "meetings": []
+  },
+  "expect": {
+    "items": [
+      {
+        "match": [
+          "domain"
+        ],
+        "owner": null
+      }
+    ],
+    "questions_min": 1,
+    "min_steps": 1
+  }
+}

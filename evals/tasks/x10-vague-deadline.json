@@ -1,0 +1,51 @@
+{
+  "id": "x10-vague-deadline",
+  "category": "extraction",
+  "source": "synthetic",
+  "label": "A vague deadline is not turned into a date",
+  "meeting_date": "2026-11-21",
+  "text": "Mei: I'll send the survey results sometime soon.\nDanial: And I will update the FAQ page by Tuesday.",
+  "memory": {
+    "people": [
+      {
+        "name": "Mei",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Danial",
+        "aliases": [],
+        "email": null
+      }
+    ],
+    "meetings": []
+  },
+  "expect": {
+    "items": [
+      {
+        "kind": [
+          "action"
+        ],
+        "match": [
+          "survey"
+        ],
+        "owner": "Mei",
+        "due_date": null
+      },
+      {
+        "kind": [
+          "action"
+        ],
+        "match": [
+          "faq"
+        ],
+        "owner": "Danial",
+        "due_date": "2026-11-24"
+      }
+    ],
+    "tools_required": [
+      "create_task"
+    ],
+    "min_steps": 3
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "x07-small-talk",
+  "category": "extraction",
+  "source": "synthetic",
+  "label": "Small talk before the real item",
+  "meeting_date": "2026-11-21",
+  "text": "Faris: Before we start, did anyone watch the match last night? Unreal. Anyway. The client asked whether we can support offline mode.\nAina: We don't know yet. Faris, please check how much work offline mode is and report back by Monday.\nFaris: Will do.",
+  "memory": {
+    "people": [
+      {
+        "name": "Aina",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Faris",
+        "aliases": [],
+        "email": null
+      }
+    ],
+    "meetings": []
+  },
+  "expect": {
+    "items": [
+      {
+        "kind": [
+          "action"
+        ],
+        "match": [
+          "offline"
+        ],
+        "owner": "Faris",
+        "due_date": "2026-11-23"
+      }
+    ],
+    "tools_required": [
+      "create_task"
+    ],
+    "min_steps": 2
+  }
+}

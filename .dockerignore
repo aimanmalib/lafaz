@@ -18,7 +18,6 @@ deploy/*_TAG
 __pycache__
 docs
 tests
-evals/results
 demo
 *.log
 deploy

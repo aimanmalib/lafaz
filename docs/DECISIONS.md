@@ -146,3 +146,22 @@ Short records of choices made while building Lafaz. Newest last. Each one says w
 - Measured: one live run of the synthetic sample: 4 items, 2 tasks created, 4 cards waiting, stopped with
   `missing_facts` because one question stayed open; 67 s, USD 0.032.
 - Undo: remove `app.include_router(run_router)`; the run routes disappear and the dictation page still works.
+
+## D11. Eval: fixed tasks through the real loop, scored from the database (21 Nov, 18:45 MYT)
+
+- What: `evals/tasks/*.json` (one file per task, file name = id) are checked by `lafaz/eval/tasks.py` before any
+  model call. `python -m lafaz.eval` runs each task in its own temporary SQLite file through `lafaz.agent.loop.run`
+  with the real model (threads: `eval.workers`), scores it in `lafaz/eval/score.py`, saves
+  `evals/results/<UTC time>.json` and rewrites `docs/MEASURED.md`. `/eval` shows the newest results file.
+- Why from the database: the four measures must describe what Lafaz did, not what the model said it did. Task
+  success needs every expected item (kind, words, owner, resolved date), correction, question, required tool and
+  stop. Constraint adherence counts irreversible steps that executed plus approvals marked approved, because no
+  person is present during an eval; any count above 0 makes the command exit 1.
+- Path quality is tool steps over the task's own `min_steps`. Extra plan calls that only file approvals count as
+  steps, so the ratio is honest rather than flattering.
+- The first run found two real faults, both fixed with regression tests: a supporting quote under three words
+  ("Will do") rejected a whole item that had a full quote (now the short quote is dropped, an item with only short
+  quotes is still rejected), and "for Friday" / "Friday the 27th" were not resolved (now `for` is a filler word and a
+  weekday with a date resolves only when both agree).
+- The results commit is recorded; `+uncommitted` is added when code, config, prompts or tasks differ from it.
+- Undo: remove `app.include_router(eval_router)` and the `eval` block in `config/lafaz.json`; nothing else reads them.

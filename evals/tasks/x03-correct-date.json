@@ -1,0 +1,52 @@
+{
+  "id": "x03-correct-date",
+  "category": "extraction",
+  "source": "synthetic",
+  "label": "Speaker corrects a date",
+  "meeting_date": "2026-11-21",
+  "text": "Mei: The workshop is on Thursday, no wait, sorry, the workshop is on Friday the 27th.\nDanial: Got it. I'll book the training room for Friday.\nMei: Thanks, Danial.",
+  "memory": {
+    "people": [
+      {
+        "name": "Mei",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Danial",
+        "aliases": [],
+        "email": null
+      }
+    ],
+    "meetings": []
+  },
+  "expect": {
+    "items": [
+      {
+        "kind": [
+          "action"
+        ],
+        "match": [
+          "room"
+        ],
+        "owner": "Danial",
+        "due_date": "2026-11-27"
+      }
+    ],
+    "corrections": [
+      {
+        "match": [
+          "workshop"
+        ],
+        "includes_any": [
+          "friday",
+          "27"
+        ]
+      }
+    ],
+    "tools_required": [
+      "create_task"
+    ],
+    "min_steps": 2
+  }
+}

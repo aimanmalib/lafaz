@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}{{ t('eval.page_title') }} | {{ t('site.title') }}{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ asset('css/eval.css') }}">{% endblock %}
+{% block main %}
+<article class="ledger">
+  <header class="ledger-head">
+    <h1>{{ t('eval.heading') }}</h1>
+    <p class="ledger-intro">{{ t('eval.intro') }}</p>
+    {% if result %}
+    <p class="ledger-meta">{{ t('eval.meta', started=result.started, model=result.model, commit=result.commit, file=results_name) }}</p>
+    {% endif %}
+  </header>
+  {% if not result %}
+  <p class="notice" role="status">{{ t('eval.empty') }}</p>
+  {% else %}
+  {% set s = result.summary %}
+  <dl class="measures">
+    <div class="measure">
+      <dt>{{ t('eval.m.success') }}</dt>
+      <dd class="figure">{{ t('eval.m.success_value', passed=s.task_success.passed, tasks=s.tasks) }}</dd>
+      <dd class="how">{{ t('eval.m.success_how') }}</dd>
+    </div>
+    <div class="measure">
+      <dt>{{ t('eval.m.path') }}</dt>
+      <dd class="figure">{{ t('eval.m.path_value', ratio=s.path_quality.mean_ratio) }}</dd>
+      <dd class="how">{{ t('eval.m.path_how', repeats=s.path_quality.repeated_calls) }}</dd>
+    </div>
+    <div class="measure{% if s.constraint_violations %} broken{% endif %}">
+      <dt>{{ t('eval.m.constraint') }}</dt>
+      <dd class="figure">{{ t('eval.m.constraint_value', n=s.constraint_violations) }}</dd>
+      <dd class="how">{{ t('eval.m.constraint_how', pending=s.approvals_pending) }}</dd>
+    </div>
+    <div class="measure">
+      <dt>{{ t('eval.m.giveup') }}</dt>
+      {% if s.give_up_quality.tasks %}
+      <dd class="figure">{{ t('eval.m.giveup_value', mean=s.give_up_quality.mean) }}</dd>
+      <dd class="how">{{ t('eval.m.giveup_how', n=s.give_up_quality.tasks) }}</dd>
+      {% else %}
+      <dd class="figure">&ndash;</dd>
+      <dd class="how">{{ t('eval.m.giveup_none') }}</dd>
+      {% endif %}
+    </div>
+  </dl>
+  <section class="support" aria-labelledby="support-h">
+    <h2 id="support-h">{{ t('eval.support') }}</h2>
+    <ul>
+      <li>{{ t('eval.s.rejected', n=s.quotes_rejected.count) }}</li>
+      <li>{{ t('eval.s.corrections', resolved=s.corrections.resolved, expected=s.corrections.expected) }}</li>
+      <li>{{ t('eval.s.latency', p50=s.latency_ms.p50, p95=s.latency_ms.p95) }}</li>
+      <li>{{ t('eval.s.cost', mean=s.cost_usd.mean, total=s.cost_usd.total) }}</li>
+    </ul>
+  </section>
+  <section class="tasks" aria-labelledby="tasks-h">
+    <h2 id="tasks-h">{{ t('eval.tasks') }}</h2>
+    <ol class="task-list">
+      {% for r in result.tasks %}
+      <li class="task {{ 'pass' if r.success else 'fail' }}">
+        <details id="task-{{ r.id }}">
+          <summary>
+            <span class="verdict">{{ t('eval.pass') if r.success else t('eval.fail') }}</span>
+            <span class="task-label">{{ r.label }}</span>
+            <code class="task-id">{{ r.id }}</code>
+          </summary>
+          <div class="task-body">
+            <p class="task-facts">
+              <span>{{ t('eval.cat.' ~ r.category) }}</span>
+              <span>{{ t('eval.source.' ~ r.source) }}</span>
+              <span>{{ t('eval.stop', reason=r.reason) }}</span>
+              <span>{{ t('eval.steps', used=r.steps_used, min=r.min_steps) }}</span>
+              <span>{{ t('eval.cost', cost=r.cost_usd, ms=r.ms) }}</span>
+            </p>
+            {% if r.error %}<p class="notice">{{ t('eval.error', error=r.error) }}</p>{% endif %}
+            <h3>{{ t('eval.checks') }}</h3>
+            <ul class="checks">
+              {% for name, ok in r.checks.items() %}
+              <li class="{{ 'ok' if ok else 'no' }}"><span class="sr">{{ t('eval.ok') if ok else t('eval.no') }}: </span>{{ t('eval.check.' ~ name) }}</li>
+              {% endfor %}
+            </ul>
+            {% if r['items'] %}
+            <h3>{{ t('eval.expected') }}</h3>
+            <ul class="checks">
+              {% for row in r['items'] %}
+              <li class="{{ 'ok' if row.found else 'no' }}"><span class="sr">{{ t('eval.ok') if row.found else t('eval.no') }}: </span>{{ row.expected | join(', ') }}{% if row.item %}<span class="said">{{ row.item }}</span>{% endif %}</li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+            <h3>{{ t('eval.trace') }}</h3>
+            <ol class="steps">
+              {% for st in r.trace %}
+              <li><code>{{ st.tool }}</code> <span class="cat cat-{{ st.category }}">{{ st.category }}</span> <span class="st">{{ st.status }}</span> <span class="ms">{{ st.ms }} ms</span></li>
+              {% endfor %}
+            </ol>
+          </div>
+        </details>
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+  {% endif %}
+</article>
+{% endblock %}

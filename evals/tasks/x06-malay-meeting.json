@@ -1,0 +1,49 @@
+{
+  "id": "x06-malay-meeting",
+  "category": "extraction",
+  "source": "synthetic",
+  "label": "Meeting held in Malay",
+  "meeting_date": "2026-11-21",
+  "text": "Hakim: Baik, minggu ini kita fokus pada laporan suku tahun.\nNurul: Saya siapkan draf laporan suku tahun sebelum Rabu.\nHakim: Bagus. Kita putuskan mesyuarat bulanan dipindahkan ke hari Selasa.",
+  "memory": {
+    "people": [
+      {
+        "name": "Hakim",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Nurul",
+        "aliases": [],
+        "email": null
+      }
+    ],
+    "meetings": []
+  },
+  "expect": {
+    "items": [
+      {
+        "kind": [
+          "action"
+        ],
+        "match": [
+          "laporan"
+        ],
+        "owner": "Nurul",
+        "due_date": "2026-11-25"
+      },
+      {
+        "kind": [
+          "decision"
+        ],
+        "match": [
+          "selasa"
+        ]
+      }
+    ],
+    "tools_required": [
+      "create_task"
+    ],
+    "min_steps": 2
+  }
+}

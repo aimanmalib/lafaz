@@ -13,6 +13,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from . import config, db, runner
 from .assets import STATIC_DIR
 from .memory import scheduler
+from .routes_eval import router as eval_router
 from .routes_run import router as run_router
 from .web import context, render, today
 
@@ -61,6 +62,7 @@ def create_app() -> FastAPI:
         return render("partials/sheet.html", ctx)
 
     app.include_router(run_router)
+    app.include_router(eval_router)
 
     @app.exception_handler(StarletteHTTPException)
     async def not_found(request: Request, exc: StarletteHTTPException):

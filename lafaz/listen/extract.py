@@ -79,6 +79,7 @@ def check(raw: dict, text: str, meeting_date: date, people: list[dict]) -> Liste
     result = ListenResult()
     kept: dict[int, int] = {}
     for source_index, proposed in enumerate(raw.get("items") or []):
+        proposed = checker.drop_short(proposed)
         verdict = checker.check_item(proposed)
         if not verdict.ok:
             result.rejected.append({"item": proposed, "reason": verdict.reason, "detail": verdict.detail})

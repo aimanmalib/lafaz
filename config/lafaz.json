@@ -60,5 +60,13 @@
   },
   "run_page": {
     "poll_seconds": 2
+  },
+  "eval": {
+    "tasks_dir": "evals/tasks",
+    "results_dir": "evals/results",
+    "measured_path": "docs/MEASURED.md",
+    "workers": 4,
+    "rejected_examples": 3,
+    "trace_max_steps": 30
   }
 }

@@ -104,6 +104,16 @@ def _calendar_rule(core: str, anchor: date, words: dict) -> date | None:
     return None
 
 
+def _weekday_and_date_rule(core: str, anchor: date, words: dict) -> date | None:
+    """'Friday the 27th', 'Jumaat 27 November': the date decides, the weekday must agree or nothing is returned."""
+    first, _, rest = core.partition(" ")
+    weekday = words["weekdays"].get(first)
+    if weekday is None or not rest:
+        return None
+    found = _day_of_month(anchor, int(rest)) if re.fullmatch(r"\d{1,2}", rest) else _calendar_rule(rest, anchor, words)
+    return found if found and found.weekday() == weekday else None
+
+
 def _span_rule(tokens: list[str], anchor: date, words: dict) -> date | None:
     text = " ".join(tokens)
     prefixes = "|".join(map(re.escape, sorted(words["in_prefixes"], key=len, reverse=True)))
@@ -129,4 +139,5 @@ def resolve(phrase: str | None, meeting_date: date) -> date | None:
     core = " ".join(_strip_fillers(tokens, set(words["filler_words"])))
     if core in words["relative_days"]:
         return meeting_date + timedelta(days=words["relative_days"][core])
-    return _weekday_rule(core, meeting_date, words) or _calendar_rule(core, meeting_date, words)
+    return (_weekday_rule(core, meeting_date, words) or _calendar_rule(core, meeting_date, words)
+            or _weekday_and_date_rule(core, meeting_date, words))

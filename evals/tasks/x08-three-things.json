@@ -1,0 +1,64 @@
+{
+  "id": "x08-three-things",
+  "category": "extraction",
+  "source": "synthetic",
+  "label": "One decision and two tasks in a list",
+  "meeting_date": "2026-11-21",
+  "text": "Aina: Three things. One, the beta moves to the 5th of December. Two, Mei sends the pilot schools the new date tomorrow. Three, Faris fixes the payment page by Wednesday.\nFaris: Yes.\nMei: Okay.",
+  "memory": {
+    "people": [
+      {
+        "name": "Aina",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Faris",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Mei",
+        "aliases": [],
+        "email": null
+      }
+    ],
+    "meetings": []
+  },
+  "expect": {
+    "items": [
+      {
+        "kind": [
+          "decision"
+        ],
+        "match": [
+          "beta"
+        ]
+      },
+      {
+        "kind": [
+          "action"
+        ],
+        "match": [
+          "pilot"
+        ],
+        "owner": "Mei",
+        "due_date": "2026-11-22"
+      },
+      {
+        "kind": [
+          "action"
+        ],
+        "match": [
+          "payment page"
+        ],
+        "owner": "Faris",
+        "due_date": "2026-11-25"
+      }
+    ],
+    "tools_required": [
+      "create_task"
+    ],
+    "min_steps": 3
+  }
+}

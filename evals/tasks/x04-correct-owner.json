@@ -1,0 +1,54 @@
+{
+  "id": "x04-correct-owner",
+  "category": "extraction",
+  "source": "synthetic",
+  "label": "Speaker corrects who owns a task",
+  "meeting_date": "2026-11-21",
+  "text": "Aina: Faris will write the release notes. Actually, no, Faris is on leave next week, Mei will write the release notes by Friday.\nMei: Okay, I'll do it.",
+  "memory": {
+    "people": [
+      {
+        "name": "Aina",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Faris",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Mei",
+        "aliases": [],
+        "email": null
+      }
+    ],
+    "meetings": []
+  },
+  "expect": {
+    "items": [
+      {
+        "kind": [
+          "action"
+        ],
+        "match": [
+          "release notes"
+        ],
+        "owner": "Mei",
+        "due_date": "2026-11-27"
+      }
+    ],
+    "corrections": [
+      {
+        "match": [
+          "release notes"
+        ],
+        "owner": "Mei"
+      }
+    ],
+    "tools_required": [
+      "create_task"
+    ],
+    "min_steps": 2
+  }
+}

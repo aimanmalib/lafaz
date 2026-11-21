@@ -1,0 +1,51 @@
+{
+  "id": "x01-fillers-standup",
+  "category": "extraction",
+  "source": "synthetic",
+  "label": "Stand-up full of fillers",
+  "meeting_date": "2026-11-21",
+  "text": "Aina: Um, okay, so, like, quick update. Faris, you know, can you, uh, finish the invoice export by Wednesday?\nFaris: Yeah, yeah, I'll finish the invoice export by Wednesday.\nAina: Great. And, um, we decided the office stays closed on Monday for the public holiday.",
+  "memory": {
+    "people": [
+      {
+        "name": "Aina",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Faris",
+        "aliases": [],
+        "email": null
+      }
+    ],
+    "meetings": []
+  },
+  "expect": {
+    "items": [
+      {
+        "kind": [
+          "action"
+        ],
+        "match": [
+          "invoice export"
+        ],
+        "owner": "Faris",
+        "due_date": "2026-11-25"
+      },
+      {
+        "kind": [
+          "decision",
+          "fact"
+        ],
+        "match": [
+          "closed",
+          "monday"
+        ]
+      }
+    ],
+    "tools_required": [
+      "create_task"
+    ],
+    "min_steps": 2
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "id": "x05-mixed-languages",
+  "category": "extraction",
+  "source": "synthetic",
+  "label": "Malay and English in one meeting",
+  "meeting_date": "2026-11-21",
+  "text": "Aina: Okay team, kita dah setuju harga pakej asas kekal RM 49 sebulan.\nFaris: Saya akan update landing page esok.\nMei: I'll email the three pilot schools about the price lusa.",
+  "memory": {
+    "people": [
+      {
+        "name": "Aina",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Faris",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Mei",
+        "aliases": [],
+        "email": null
+      }
+    ],
+    "meetings": []
+  },
+  "expect": {
+    "items": [
+      {
+        "kind": [
+          "decision"
+        ],
+        "match": [
+          "49"
+        ]
+      },
+      {
+        "kind": [
+          "action"
+        ],
+        "match": [
+          "landing page"
+        ],
+        "owner": "Faris",
+        "due_date": "2026-11-22"
+      },
+      {
+        "kind": [
+          "action"
+        ],
+        "match": [
+          "pilot"
+        ],
+        "owner": "Mei",
+        "due_date": "2026-11-23"
+      }
+    ],
+    "tools_required": [
+      "create_task"
+    ],
+    "min_steps": 3
+  }
+}

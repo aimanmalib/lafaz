@@ -73,6 +73,18 @@ class QuoteChecker:
             return Verdict(False, "correction_order", new_quote)
         return Verdict(True)
 
+    def drop_short(self, item: dict) -> dict:
+        """Drop supporting quotes under the word minimum when at least one quote meets it.
+
+        "Will do" next to a full sentence is not evidence, but it is not a made-up quote either; the item stands on
+        its long quote. An item whose quotes are all too short is still rejected by check_item.
+        """
+        quotes = [q for q in item.get("quotes") or [] if isinstance(q, str)]
+        long = [q for q in quotes if word_count(_clean_quote(q)) >= self.min_words]
+        if not long or len(long) == len(quotes):
+            return item
+        return {**item, "quotes": long}
+
     def check_item(self, item: dict) -> Verdict:
         quotes = [q for q in item.get("quotes") or [] if isinstance(q, str)]
         if not quotes:

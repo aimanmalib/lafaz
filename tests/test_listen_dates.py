@@ -51,3 +51,14 @@ def test_day_number_already_past_this_month_means_next_month():
 @pytest.mark.parametrize("phrase", ["soon", "next week", "minggu depan", "ASAP", "31st", "", None, "end of the quarter"])
 def test_vague_or_impossible_phrases_are_not_guessed(phrase):
     assert resolve(phrase, SATURDAY) is None
+
+
+@pytest.mark.parametrize("phrase, expected", [
+    ("for Friday", date(2026, 11, 27)),
+    ("Friday the 27th", date(2026, 11, 27)),
+    ("on Friday the 27", date(2026, 11, 27)),
+    ("Jumaat 27 November", date(2026, 11, 27)),
+    ("Thursday the 27th", None),
+])
+def test_weekday_with_a_date_must_agree(phrase, expected):
+    assert resolve(phrase, SATURDAY) == expected
