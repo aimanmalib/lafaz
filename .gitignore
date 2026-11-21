@@ -1,0 +1,16 @@
+dalaman/
+.env
+.env.*
+!.env.example
+state/
+*.token
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+*.db
+*.sqlite3
+.autopilot/
+NEXT.md
+CLAUDE.md
+CLAUDE.local.md
