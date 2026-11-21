@@ -132,7 +132,73 @@
       "name": "judge_conflict",
       "kategori": "read",
       "enabled": true,
-      "description": "Decide whether a new decision contradicts an earlier active decision, quoting both."
+      "description": "Decide whether a new decision contradicts one earlier active decision. Quote the words of each, copied exactly from its own meeting.",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "conflict",
+          "old_quote",
+          "new_quote",
+          "reason"
+        ],
+        "properties": {
+          "conflict": {
+            "type": "boolean",
+            "description": "True only when both decisions cannot hold at the same time."
+          },
+          "old_quote": {
+            "type": "string",
+            "description": "Exact span from the earlier meeting text, at least three words."
+          },
+          "new_quote": {
+            "type": "string",
+            "description": "Exact span from the new meeting text, at least three words."
+          },
+          "reason": {
+            "type": "string",
+            "description": "One plain sentence, in the language of the new meeting."
+          }
+        }
+      }
+    },
+    {
+      "name": "replace_decision",
+      "kategori": "reversible",
+      "enabled": true,
+      "description": "Mark the earlier decision as replaced by the new one. Can be undone.",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "conflict_id"
+        ],
+        "properties": {
+          "conflict_id": {
+            "type": "integer"
+          }
+        }
+      },
+      "stage": "card"
+    },
+    {
+      "name": "keep_both_decisions",
+      "kategori": "reversible",
+      "enabled": true,
+      "description": "Keep both decisions active and close the conflict card. Can be undone.",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "conflict_id"
+        ],
+        "properties": {
+          "conflict_id": {
+            "type": "integer"
+          }
+        }
+      },
+      "stage": "card"
     },
     {
       "name": "create_task",
@@ -211,7 +277,7 @@
       "name": "send_reminder",
       "kategori": "irreversible",
       "enabled": true,
-      "description": "Email a reminder to the owner of a task before its due date. Needs a person's approval.",
+      "description": "Ask a person to approve a reminder policy for one task: email its owner a set number of days before the due date. Once approved, Lafaz sends it on that day within the policy limits.",
       "input_schema": {
         "type": "object",
         "additionalProperties": false,

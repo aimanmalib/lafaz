@@ -113,3 +113,59 @@ CREATE TABLE IF NOT EXISTS outbox (
     status TEXT NOT NULL DEFAULT 'queued',
     created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
+
+-- Memory and conflicts (B3). Decisions are never deleted; a replaced one is marked 'superseded' and points at the
+-- decision that replaced it.
+CREATE TABLE IF NOT EXISTS people (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE,
+    aliases_json TEXT NOT NULL DEFAULT '[]',
+    email TEXT,
+    created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
+);
+
+CREATE TABLE IF NOT EXISTS decisions (
+    id INTEGER PRIMARY KEY,
+    run_id INTEGER NOT NULL REFERENCES runs(id),
+    meeting_id INTEGER NOT NULL REFERENCES meetings(id),
+    item_seq INTEGER NOT NULL,
+    topic TEXT NOT NULL,
+    statement TEXT NOT NULL,
+    quote TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'superseded')),
+    superseded_by INTEGER REFERENCES decisions(id),
+    created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
+    UNIQUE (run_id, item_seq)
+);
+
+CREATE TABLE IF NOT EXISTS conflicts (
+    id INTEGER PRIMARY KEY,
+    run_id INTEGER NOT NULL REFERENCES runs(id),
+    new_decision_id INTEGER NOT NULL REFERENCES decisions(id),
+    old_decision_id INTEGER NOT NULL REFERENCES decisions(id),
+    shared_terms TEXT NOT NULL,
+    verdict TEXT NOT NULL CHECK (verdict IN ('conflict', 'no_conflict', 'rejected', 'not_judged')),
+    reason TEXT,
+    reject_reason TEXT,
+    old_quote TEXT,
+    new_quote TEXT,
+    status TEXT NOT NULL DEFAULT 'closed' CHECK (status IN ('open', 'replaced', 'kept', 'asked', 'closed')),
+    approval_id INTEGER REFERENCES approvals(id),
+    created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
+    decided_at TEXT,
+    UNIQUE (new_decision_id, old_decision_id)
+);
+
+-- A person approves a reminder POLICY once per task; the in-process scheduler then sends within its limits.
+CREATE TABLE IF NOT EXISTS reminder_policies (
+    id INTEGER PRIMARY KEY,
+    task_id INTEGER NOT NULL REFERENCES tasks(id),
+    approval_id INTEGER REFERENCES approvals(id),
+    days_before INTEGER NOT NULL,
+    message TEXT NOT NULL,
+    max_sends INTEGER NOT NULL,
+    sends INTEGER NOT NULL DEFAULT 0,
+    last_sent_on TEXT,
+    status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'finished', 'stopped')),
+    created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
+);

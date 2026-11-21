@@ -18,6 +18,7 @@ from .. import config
 from ..listen import store
 from ..listen.extract import ListenResult, listen
 from ..llm import LLM, LLMError
+from ..memory import conflicts, people as memory_people
 from . import gate, trace
 from .context import load
 
@@ -92,8 +93,9 @@ def handoff(conn: sqlite3.Connection, run_id: int, reason: str, skipped: list[di
             not_done.append({**entry, "status": step["status"], "result": json.loads(step["result_summary"] or "{}")})
     questions = [dict(q) for q in conn.execute(
         "SELECT origin, code, params_json, text, item_seq, quote FROM questions WHERE run_id=? ORDER BY seq", (run_id,))]
+    cards = [c["id"] for c in conflicts.open_cards(conn, run_id) if c["status"] == "open"]
     return {"reason": reason, "done": done, "not_done": not_done, "questions": questions,
-            "quotes": [q["quote"] for q in questions if q["quote"]]}
+            "quotes": [q["quote"] for q in questions if q["quote"]], "conflicts": cards}
 
 
 def _finish(conn, run_id: int, budget: Budget, reason: str | None, skipped=None) -> dict:
@@ -129,12 +131,15 @@ def run(conn: sqlite3.Connection, run_id: int, text: str, meeting_date: date, pe
         llm: LLM | None = None, clock=time.monotonic) -> dict:
     llm = llm or LLM()
     budget = Budget(clock=clock)
+    known = memory_people.all_people(conn) if people is None else people
     try:
-        result = _listen(conn, run_id, text, meeting_date, people or [], llm, budget)
+        result = _listen(conn, run_id, text, meeting_date, known, llm, budget)
     except Exception as exc:  # noqa: BLE001 - any model failure is a designed stop, never a crash page
         return _finish(conn, run_id, budget, _model_error(exc))
     if not result.items:
         return _finish(conn, run_id, budget, "nothing_heard")
+    memory_people.remember_run(conn, run_id)
+    conflicts.detect(conn, run_id, llm, budget)
     ctx = load(conn, run_id)
     tools = [t["name"] for t in gate.plan_tools()]
     messages = [{"role": "user", "content": plan_message(result, meeting_date)}]

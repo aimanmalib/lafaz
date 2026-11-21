@@ -13,6 +13,7 @@ SCHEMA = Path(__file__).with_name("schema.sql")
 ADDED_COLUMNS = {
     "runs": {"handoff_json": "TEXT", "cost_usd": "REAL", "finished_at": "TEXT"},
     "steps": {"status": "TEXT", "approval_id": "INTEGER", "undo_json": "TEXT"},
+    "outbox": {"policy_id": "INTEGER", "label": "TEXT"},
 }
 
 

@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from datetime import datetime
-from zoneinfo import ZoneInfo
+import asyncio
+import contextlib
 
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse, JSONResponse
@@ -14,13 +14,14 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from . import config, db, i18n
 from .assets import STATIC_DIR, asset_url
 from .config import REPO_ROOT
+from .memory import scheduler
 
 templates = Jinja2Templates(directory=str(REPO_ROOT / "templates"))
 templates.env.globals["asset"] = asset_url
 
 
 def _today() -> str:
-    return datetime.now(ZoneInfo(config.settings()["app"]["timezone"])).date().isoformat()
+    return scheduler.today().isoformat()
 
 
 def _context(request: Request, **extra: object) -> dict:
@@ -50,8 +51,19 @@ def _render(name: str, ctx: dict, status_code: int = 200) -> HTMLResponse:
     return response
 
 
+@contextlib.asynccontextmanager
+async def lifespan(app: FastAPI):
+    task = asyncio.create_task(scheduler.loop())
+    try:
+        yield
+    finally:
+        task.cancel()
+        with contextlib.suppress(asyncio.CancelledError):
+            await task
+
+
 def create_app() -> FastAPI:
-    app = FastAPI(title="Lafaz", docs_url=None, redoc_url=None, openapi_url=None)
+    app = FastAPI(title="Lafaz", docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan)
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
     db.init()
 

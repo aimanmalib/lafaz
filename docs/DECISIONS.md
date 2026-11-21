@@ -102,3 +102,26 @@ Short records of choices made while building Lafaz. Newest last. Each one says w
 - Measured: one live run on the synthetic sample created 2 tasks and filed 4 approvals (2 reminders, 1 team question,
   1 publish), sent nothing, took about 37 s and cost USD 0.033 by `config/prices.json`.
 - Undo: the gate is one module; changing a tool's `kategori` in config changes its behaviour without code.
+
+## D9. Memory and conflicts: code picks candidates, the model judges, a person decides (21 Nov, 17:30 MYT)
+
+- What: `lafaz/memory/` adds people, decisions, conflicts and reminder policies (new tables in `lafaz/schema.sql`,
+  `outbox.policy_id` and `outbox.label` by ADD COLUMN; nothing is dropped).
+  - Each accepted decision item becomes an active decision. Earlier active decisions from other runs become
+    candidates only when they share at least `conflict.min_shared_terms` terms after normalising and removing the
+    stopwords in `config/memory.json`. The model is never asked about a pair code did not pick.
+  - The model judges each pair with `judge_conflict` (strict schema in `config/tools.json`). Code checks the old quote
+    against the old meeting text and the new quote against the new one. A failed check is stored as `rejected` with
+    its reason; a model error or a spent budget is stored as `not_judged`. Only `conflict` verdicts open a card.
+  - Card buttons map to tools in `conflict.choices`: Replace (`replace_decision`) and Keep both
+    (`keep_both_decisions`) are `reversible` and can be undone; Ask the team is `ask_team`, `irreversible`, so it
+    waits for approval. These tools have `"stage": "card"`, so the agent loop never sees them, and the gate still
+    decides from `kategori`.
+  - Approving `send_reminder` now approves a policy. The scheduler, an asyncio task inside the app (no outside daemon),
+    runs every `scheduler.reminder_check_seconds`. It sends only to the task owner, from the send day to the due date,
+    at most `reminders.max_sends_per_policy` times, never twice on one day, and stops when the task is done or undone.
+    Each send carries the label `approved_once` ("Approved once, runs within limits").
+  - Owners and speakers heard in a run are remembered as people; the next run's listen call receives them.
+- Measured: one live `judge_conflict` call on two synthetic meetings reported the conflict with both quotes accepted
+  by code, in about 19 s, USD 0.004 by `config/prices.json`.
+- Undo: the memory step is two lines in `lafaz/agent/loop.py`; removing them leaves the loop as in D8.

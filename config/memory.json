@@ -1,0 +1,26 @@
+{
+  "_note": "Memory and conflicts (PRD 4.6). Candidate old decisions are picked by code from shared terms after normalising; the model only judges candidates. Choices map a conflict card button to a tool in tools.json, whose kategori decides whether it runs or waits for a person.",
+  "conflict": {
+    "min_shared_terms": 2,
+    "max_candidates": 3,
+    "min_term_chars": 3,
+    "choices": {
+      "replace": "replace_decision",
+      "keep": "keep_both_decisions",
+      "ask": "ask_team"
+    },
+    "stopwords": [
+      "the", "and", "for", "with", "that", "this", "these", "those", "from", "into", "onto", "then", "than", "but",
+      "not", "are", "was", "were", "will", "would", "should", "could", "can", "have", "has", "had", "let", "lets",
+      "let's", "we'll", "i'll", "you'll", "our", "your", "their", "them", "they", "its", "it's", "all", "any",
+      "still", "just", "also", "now", "okay", "fine", "yes", "yeah", "want", "move", "moves", "moved", "make",
+      "going", "agreed", "agree", "decide", "decided", "decision", "until", "about", "after", "before", "on",
+      "dan", "yang", "untuk", "dengan", "ini", "itu", "kita", "kami", "saya", "akan", "sudah", "telah", "boleh",
+      "pada", "dari", "dalam", "ke", "di", "ada", "tidak", "tak", "juga", "lagi", "jadi", "kalau", "atau", "oleh",
+      "setuju", "putuskan", "keputusan", "pindah", "tukar", "sebelum", "selepas", "hingga", "sampai"
+    ]
+  },
+  "reminders": {
+    "max_sends_per_policy": 1
+  }
+}

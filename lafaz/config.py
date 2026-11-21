@@ -40,6 +40,11 @@ def listen() -> dict:
 
 
 @lru_cache(maxsize=None)
+def memory() -> dict:
+    return _read("memory.json")
+
+
+@lru_cache(maxsize=None)
 def prices() -> dict:
     return _read("prices.json")
 
@@ -68,5 +73,5 @@ def db_path() -> Path:
 
 
 def clear_cache() -> None:
-    for fn in (settings, tools, samples, messages, listen, prices, prompt):
+    for fn in (settings, tools, samples, messages, listen, memory, prices, prompt):
         fn.cache_clear()

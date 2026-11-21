@@ -2,7 +2,8 @@
 
 Every action has `prepare` (check the arguments against the run, return a readable diff) and `execute` (do it).
 Reversible actions return an undo record. Irreversible actions only ever execute from gate.approve.
-Email actions put a message in the outbox; delivery is a later layer.
+Email actions put a message in the outbox; delivery is a later layer. An approved `send_reminder` is a policy: the
+scheduler (lafaz.memory.reminders) queues the email on its day, inside the limits the person approved.
 """
 
 from __future__ import annotations
@@ -10,6 +11,8 @@ from __future__ import annotations
 from datetime import date, timedelta
 
 from .. import config
+from ..memory import reminders
+from . import card_actions
 from .context import ActionError, RunContext
 
 
@@ -98,7 +101,7 @@ def _reminder(ctx: RunContext, args: dict) -> dict:
         raise ActionError("days_before_out_of_range", str(args["days_before"]))
     send_on = date.fromisoformat(task["due_date"]) - timedelta(days=args["days_before"])
     return {"recipient": task["owner"], "subject": task["title"], "body": args["message"].strip(),
-            "send_on": send_on.isoformat()}
+            "send_on": send_on.isoformat(), "max_sends": config.memory()["reminders"]["max_sends_per_policy"]}
 
 
 def _summary(ctx: RunContext, args: dict) -> dict:
@@ -120,6 +123,7 @@ def _email_diff(message: dict) -> dict:
     changes = [("to", None, message["recipient"]), ("subject", None, message["subject"]), ("body", None, message["body"])]
     if message.get("send_on"):
         changes.append(("send_on", None, message["send_on"]))
+        changes.append(("max_sends", None, message["max_sends"]))
     if message.get("quote"):
         changes.append(("quote", None, message["quote"]))
     return _diff("email", *changes)
@@ -133,6 +137,10 @@ def _email_execute(name: str):
     def execute(ctx: RunContext, args: dict, approval_id: int | None = None) -> tuple[dict, None]:
         message = _EMAILS[name](ctx, args)
         _email_diff(message)
+        if name == "send_reminder":
+            policy = reminders.create_policy(ctx.conn, ctx.task(args["task_id"]), approval_id, args["days_before"],
+                                             message["body"])
+            return {"policy_id": policy, "recipient": message["recipient"], "send_on": message["send_on"]}, None
         cur = ctx.conn.execute(
             "INSERT INTO outbox (run_id, approval_id, tool, recipient, subject, body) VALUES (?,?,?,?,?,?)",
             (ctx.run_id, approval_id, name, message["recipient"], message["subject"], message["body"]),
@@ -147,6 +155,7 @@ PREPARE = {
     "preview_summary": prepare_preview_summary,
     "publish_to_board": prepare_publish_to_board,
     **{name: _email_prepare(name) for name in _EMAILS},
+    **card_actions.PREPARE,
 }
 
 EXECUTE = {
@@ -154,6 +163,7 @@ EXECUTE = {
     "preview_summary": execute_preview_summary,
     "publish_to_board": execute_publish_to_board,
     **{name: _email_execute(name) for name in _EMAILS},
+    **card_actions.EXECUTE,
 }
 
 UNDO_STATUS = {"tasks": "undone", "drafts": "discarded"}
@@ -161,6 +171,9 @@ UNDO_STATUS = {"tasks": "undone", "drafts": "discarded"}
 
 def undo(ctx: RunContext, record: dict) -> None:
     table = record["table"]
+    if table in card_actions.UNDO:
+        card_actions.UNDO[table](ctx, record)
+        return
     if table not in UNDO_STATUS:
         raise ActionError("cannot_undo", table)
     if table == "tasks" and ctx.conn.execute("SELECT published FROM tasks WHERE id=?", (record["id"],)).fetchone()[0]:

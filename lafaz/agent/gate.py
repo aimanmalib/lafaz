@@ -52,13 +52,16 @@ def category_of(name: str) -> str | None:
     return kategori if kategori in CATEGORIES else None
 
 
-def _check(name: str, args) -> tuple[str, dict]:
-    """Return (category, entry) or raise ActionError. Unknown, disabled or malformed calls never reach an action."""
+def _check(name: str, args, stage: str | None = "plan") -> tuple[str, dict]:
+    """Return (category, entry) or raise ActionError. Unknown, disabled or malformed calls never reach an action.
+
+    The loop only reaches `plan` tools. Conflict-card tools have stage `card` and are dispatched for a person's click.
+    """
     category = category_of(name)
     if category is None:
         raise ActionError("unknown_tool", name)
     entry = config.tool(name)
-    if not entry.get("enabled") or entry.get("stage") != "plan" or name not in actions.EXECUTE:
+    if not entry.get("enabled") or not entry.get("stage") or entry.get("stage") != stage or name not in actions.EXECUTE:
         raise ActionError("tool_not_available", name)
     if not isinstance(args, dict):
         raise ActionError("bad_arguments", type(args).__name__)
@@ -68,11 +71,11 @@ def _check(name: str, args) -> tuple[str, dict]:
     return category, entry
 
 
-def dispatch(ctx: RunContext, name: str, args, cost: dict | None = None) -> Outcome:
-    """Handle one tool call from the loop and record it as a step."""
+def dispatch(ctx: RunContext, name: str, args, cost: dict | None = None, stage: str = "plan") -> Outcome:
+    """Handle one tool call (from the loop, or from a card button with its own stage) and record it as a step."""
     cost = cost or {}
     try:
-        category, _ = _check(name, args)
+        category, _ = _check(name, args, stage)
         diff = actions.PREPARE[name](ctx, args)
     except ActionError as exc:
         outcome = Outcome(name, category_of(name) or "unknown", "refused", error=exc.code)
@@ -95,6 +98,13 @@ def dispatch(ctx: RunContext, name: str, args, cost: dict | None = None) -> Outc
         ctx.conn.execute("UPDATE approvals SET step_seq=? WHERE id=?", (outcome.seq, outcome.approval_id))
     ctx.conn.commit()
     return outcome
+
+
+def _stage_of(name: str) -> str | None:
+    try:
+        return config.tool(name).get("stage")
+    except KeyError:
+        return None
 
 
 def _file_approval(ctx: RunContext, name: str, args: dict, diff: dict) -> Outcome:
@@ -123,7 +133,7 @@ def approve(conn, approval_id: int, edited_args: dict | None = None) -> Outcome:
     name = row["tool"]
     args = json.loads(row["arguments_json"]) if edited_args is None else edited_args
     try:
-        category, _ = _check(name, args)
+        category, _ = _check(name, args, _stage_of(name))
         if category != "irreversible":
             raise ActionError("not_irreversible", category)
         diff = actions.PREPARE[name](ctx, args)

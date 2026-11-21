@@ -26,5 +26,11 @@
   "error.back": "Back to dictation",
   "question.owner_missing": "Who will do this: {item}?",
   "question.owner_unmatched": "Nobody called \"{name}\" is known yet. Who is this?",
-  "question.due_unclear": "Which date is \"{phrase}\"?"
+  "question.due_unclear": "Which date is \"{phrase}\"?",
+  "conflict.ask_subject": "Which decision stands?",
+  "conflict.ask_body": "On {old_date} we said: \"{old_quote}\"\nOn {new_date} we said: \"{new_quote}\"\nBoth cannot hold. Which one stands?",
+  "conflict.choice.replace": "Replace the earlier decision",
+  "conflict.choice.keep": "Keep both",
+  "conflict.choice.ask": "Ask the team",
+  "reminder.policy_label": "Approved once, runs within limits"
 }

@@ -64,11 +64,13 @@ def test_irreversible_files_an_approval_and_runs_only_on_approve(ctx):
     diff = json.loads(card["diff_json"])
     assert {"field": "to", "before": None, "after": "Faris"} in diff["changes"]
     assert {"field": "send_on", "before": None, "after": "2026-11-24"} in diff["changes"]
+    assert {"field": "max_sends", "before": None, "after": 1} in diff["changes"]
     done = gate.approve(ctx.conn, out.approval_id)
-    assert done.status == "executed" and outbox(ctx) == 1
+    # Approving a reminder approves a policy; the scheduler sends it on its day (tests/test_memory_reminders.py).
+    assert done.status == "executed" and outbox(ctx) == 0 and done.result["send_on"] == "2026-11-24"
     with pytest.raises(ActionError, match="already_decided"):
         gate.approve(ctx.conn, out.approval_id)
-    assert outbox(ctx) == 1
+    assert ctx.conn.execute("SELECT COUNT(*) FROM reminder_policies").fetchone()[0] == 1
 
 
 def test_edit_is_checked_again_and_skip_runs_nothing(ctx):

@@ -26,5 +26,11 @@
   "error.back": "Kembali ke dikte",
   "question.owner_missing": "Siapa akan buat ini: {item}?",
   "question.owner_unmatched": "Belum ada sesiapa bernama \"{name}\" dalam rekod. Siapa orang ini?",
-  "question.due_unclear": "Tarikh manakah \"{phrase}\"?"
+  "question.due_unclear": "Tarikh manakah \"{phrase}\"?",
+  "conflict.ask_subject": "Keputusan mana yang kekal?",
+  "conflict.ask_body": "Pada {old_date} kita kata: \"{old_quote}\"\nPada {new_date} kita kata: \"{new_quote}\"\nKedua-duanya tidak boleh berlaku serentak. Yang mana kekal?",
+  "conflict.choice.replace": "Gantikan keputusan lama",
+  "conflict.choice.keep": "Simpan kedua-duanya",
+  "conflict.choice.ask": "Tanya pasukan",
+  "reminder.policy_label": "Diluluskan sekali, berjalan dalam had"
 }
