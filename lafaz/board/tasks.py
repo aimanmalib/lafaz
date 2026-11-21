@@ -43,12 +43,13 @@ def waiting(conn: sqlite3.Connection, space: str) -> int:
 
 
 def dated(conn: sqlite3.Connection, space: str) -> list[sqlite3.Row]:
-    """Open tasks with a due date, for the calendar feed, with their active reminder policies."""
+    """Open published tasks with a due date, for the calendar feed. The feed is subscribed to by the team, so a task
+    nobody approved publishing never appears in it."""
     statuses = ["todo", "doing"] + (["done"] if config.board()["ics"]["include_done"] else [])
     marks = ",".join("?" * len(statuses))
     return conn.execute(
-        f"SELECT t.* FROM tasks t JOIN runs r ON r.id = t.run_id WHERE {_SPACE} AND t.due_date IS NOT NULL "
-        f"AND t.status IN ({marks}) ORDER BY t.due_date, t.id",
+        f"SELECT t.* FROM tasks t JOIN runs r ON r.id = t.run_id WHERE {_SPACE} AND t.published = 1 "
+        f"AND t.due_date IS NOT NULL AND t.status IN ({marks}) ORDER BY t.due_date, t.id",
         (space, *statuses),
     ).fetchall()
 

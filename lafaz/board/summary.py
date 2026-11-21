@@ -1,7 +1,8 @@
 """Weekly summary per person, built by code from the database (PRD 4.6).
 
 This is the preview: reading it changes nothing. Sending a summary is the irreversible `send_summary` tool, which
-only runs after a person approves its card on a run page; nothing on the board sends email.
+only runs after a person approves its card on a run page; nothing on the board sends email. The preview sits on the
+board, so it lists published tasks only, like the board itself.
 """
 
 from __future__ import annotations
@@ -18,7 +19,8 @@ def weekly(conn: sqlite3.Connection, space: str, today: date) -> list[dict]:
     rows = conn.execute(
         "SELECT t.id, t.title, t.owner, t.due_date, t.status, t.published FROM tasks t JOIN runs r ON r.id = t.run_id "
         "JOIN meetings m ON m.id = r.meeting_id WHERE COALESCE(r.space, 'public') = ? AND t.owner IS NOT NULL "
-        "AND t.status != 'undone' AND m.meeting_date >= ? ORDER BY t.owner, t.due_date IS NULL, t.due_date, t.id",
+        "AND t.published = 1 AND t.status != 'undone' AND m.meeting_date >= ? "
+        "ORDER BY t.owner, t.due_date IS NULL, t.due_date, t.id",
         (space, since),
     ).fetchall()
     people: dict[str, dict] = {}

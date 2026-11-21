@@ -71,6 +71,14 @@ def test_unpublished_tasks_wait_off_the_board(conn):
     assert tasks.waiting(conn, "public") == 2
 
 
+def test_unpublished_tasks_stay_out_of_the_feed_and_weekly_summary(client, conn):
+    _plan(conn, "public", publish=False)
+    assert "BEGIN:VEVENT" not in ics.feed(conn, "public")
+    assert summary.weekly(conn, "public", DAY) == []
+    page = client.get("/board").text
+    assert ITEMS[0]["text"] not in page and ITEMS[1]["text"] not in page
+
+
 def test_board_page_shows_published_cards_with_quotes(client, conn):
     _, ids = _plan(conn, "public")
     page = client.get("/board").text
