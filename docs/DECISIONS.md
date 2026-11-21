@@ -184,3 +184,22 @@ Short records of choices made while building Lafaz. Newest last. Each one says w
   try of a sample would ask the model to judge a decision against itself.
 - Record again after a prompt, tool or sample change: `python -m lafaz.replay record <sample-id>` with the key set.
 - Undo: delete `evals/replay/` and the `replay` field; the site falls back to the "not live" notice.
+
+## D13. Email delivery: owner space sends, public sandbox keeps, IMAP decides "delivered" (21 Nov, 21:00 MYT)
+
+- Spaces: a run records the space it was started in (`runs.space`). The owner space is entered through a secret
+  link `/owner/<token>`; the token exists only in the environment (`LAFAZ_OWNER_TOKEN`), the link sets an HttpOnly
+  cookie, and without the token there is no owner space. Every other run is the public sandbox.
+- Public sandbox: approved emails are written to the outbox and marked `sandbox`. No SMTP connection is opened.
+- Owner space: `lafaz/mail/delivery.py` sends through SMTP over SSL (host in `config/mail.json`, login from the
+  environment), stores the Message-ID, then searches the test inbox over IMAP for that Message-ID. Only a found
+  message is `delivered`; accepted but not found within `verify.attempts` x `verify.wait_seconds` is `unverified`;
+  refused is `failed` with the error class name only. Owner space without SMTP values is `held`.
+- Recipients: every name maps to a plus alias of the one test inbox (`inbox+faris@...`), so no real person is
+  emailed. Checked live: the alias was accepted and found over IMAP 16 s after sending. `plus_alias: false` falls
+  back to the plain inbox with the name in the subject.
+- Timing: delivery runs in a worker thread after an approval and after each scheduler pass, one dispatcher at a
+  time; the run page keeps polling while an email is waiting. A restart during SMTP marks the row `unverified`
+  with `interrupted` rather than sending it twice.
+- Each delivery outcome is a trace step with status `mail_*`, so it never counts as an action that ran.
+- Undo: unset `LAFAZ_MAIL_ENV_FILE` in the host file and deploy; owner runs then show `held` and nothing is sent.

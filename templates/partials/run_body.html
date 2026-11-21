@@ -1,10 +1,11 @@
-<div id="run" class="run{% if not run.active %} run-done{% endif %}"{% if run.active %} hx-get="/run/{{ run.id }}/body?lang={{ lang }}" hx-trigger="every {{ poll }}s" hx-swap="outerHTML"{% endif %}>
+<div id="run" class="run{% if not run.active %} run-done{% endif %}"{% if run.active or mail_pending %} hx-get="/run/{{ run.id }}/body?lang={{ lang }}" hx-trigger="every {{ poll }}s" hx-swap="outerHTML"{% endif %}>
   <div class="run-head">
     <h1>{{ t('run.heading') }}</h1>
     <p class="run-meta">
       <span>{{ t('run.meeting_on', date=run.meeting_date) }}</span>
       <span>{{ t('source.' ~ run.source) }}</span>
       <span>{{ t('mode.' ~ run.mode) }}</span>
+      <span>{{ t('space.' ~ (run.space or 'public')) }}</span>
     </p>
     <a class="btn btn-quiet" href="/?lang={{ lang }}">{{ t('run.new') }}</a>
   </div>

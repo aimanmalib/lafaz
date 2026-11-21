@@ -1,0 +1,19 @@
+{
+  "_note": "Email delivery (PRD 4.7). Only runs started in the owner space send; public runs keep approved emails in the in-app outbox. Credentials come from the environment variables named here, never from this file. Every person in a meeting maps to a plus alias of the one test inbox, so no real person is ever emailed.",
+  "env": {
+    "user": "LAFAZ_SMTP_USER",
+    "password": "LAFAZ_SMTP_PASSWORD",
+    "owner_token": "LAFAZ_OWNER_TOKEN"
+  },
+  "smtp": { "host": "smtp.purelymail.com", "port": 465 },
+  "imap": { "host": "imap.purelymail.com", "port": 993, "folder": "INBOX" },
+  "timeout_s": 20,
+  "plus_alias": true,
+  "alias_max_chars": 30,
+  "team_alias": "team",
+  "subject_prefix": "[Lafaz]",
+  "from_name": "Lafaz",
+  "verify": { "attempts": 10, "wait_seconds": 4 },
+  "owner_cookie": "lafaz_owner",
+  "owner_cookie_days": 30
+}

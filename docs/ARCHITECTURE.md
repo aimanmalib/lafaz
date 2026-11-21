@@ -18,9 +18,10 @@ browser ──HTML/HTMX──> FastAPI (lafaz/app.py)
 | Config and interface text | `lafaz/config.py`, `lafaz/i18n.py` | built |
 | Storage | `lafaz/db.py`, `lafaz/schema.sql` | built (meetings, runs, steps, items, questions) |
 | Listen: quotes, owners and dates checked by code | `lafaz/listen/`, `lafaz/llm.py`, `prompts/listen.md` | built |
-| Agent loop with approval gate | `lafaz/agent` | planned |
-| Memory and conflicts | `lafaz/memory` | planned |
-| Email, calendar feed, board | `lafaz/integrations` | planned |
+| Agent loop with approval gate | `lafaz/agent` | built |
+| Memory and conflicts | `lafaz/memory` | built |
+| Email delivery (owner space, IMAP check) | `lafaz/mail` | built (D13) |
+| Calendar feed, board | `lafaz/integrations` | planned |
 
 The full required item map is in `docs/KEPUTUSAN-KICKOFF.md`.
 

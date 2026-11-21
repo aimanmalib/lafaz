@@ -160,3 +160,15 @@
   .card-actions .btn { width: 100%; }
   .card-actions form { flex: 1 1 100%; }
 }
+
+/* Outbox: each approved email and what happened to it. Delivered is the only state that carries a marker colour. */
+.outbox { list-style: none; margin: 0; padding: 0; }
+.outbox-note { font-size: var(--s-0); margin: 0 0 var(--sp-2); }
+.mail { padding: var(--sp-3) 0; border-top: 1px solid var(--rule); min-width: 0; }
+.mail:first-child { border-top: 0; }
+.mail p { margin: 0; overflow-wrap: anywhere; }
+.mail-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--sp-2); }
+.mail-subject { margin-top: var(--sp-1); font-family: var(--serif); }
+.mail-state { font-size: var(--s-0); padding: var(--sp-1) var(--sp-3); border: 1px solid var(--rule); border-radius: var(--r-pill); }
+.mail-delivered { background: var(--mk-action); color: var(--ink); border-color: transparent; font-weight: 700; }
+.mail-failed, .mail-unverified, .mail-held { color: var(--seal); border-color: var(--seal); }

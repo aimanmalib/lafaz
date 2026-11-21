@@ -1,5 +1,5 @@
 """The in-process scheduler (PRD 4.6): no daemon outside the app. Every `scheduler.reminder_check_seconds` it runs
-one reminder pass in a worker thread. A failed pass is logged and the loop carries on."""
+one reminder pass in a worker thread, then delivers whatever the outbox holds (lafaz.mail.delivery). A failed pass is logged and the loop carries on."""
 
 from __future__ import annotations
 
@@ -9,6 +9,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from .. import config, db
+from ..mail import delivery
 from . import reminders
 
 log = logging.getLogger("lafaz.scheduler")
@@ -34,5 +35,6 @@ async def loop(interval: float | None = None) -> None:
             queued = await asyncio.to_thread(run_once)
             if queued:
                 log.info("reminders queued: %d", len(queued))
+            await asyncio.to_thread(delivery.dispatch)
         except Exception:  # noqa: BLE001 - the scheduler must outlive one bad pass
             log.exception("reminder pass failed")

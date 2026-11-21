@@ -15,8 +15,11 @@ cd "$(dirname "$0")"
 BUILD_CMD=${BUILD_CMD:-docker build}
 MIN_FREE_GB=${MIN_FREE_GB:-20}
 LAFAZ_ENV_FILE=${LAFAZ_ENV_FILE:-}
-[ -z "$LAFAZ_ENV_FILE" ] || [ -r "$LAFAZ_ENV_FILE" ] || { echo "LAFAZ_ENV_FILE is set but not readable"; exit 1; }
-export LAFAZ_ENV_FILE LAFAZ_NETWORK
+LAFAZ_MAIL_ENV_FILE=${LAFAZ_MAIL_ENV_FILE:-}
+for f in "$LAFAZ_ENV_FILE" "$LAFAZ_MAIL_ENV_FILE"; do
+  [ -z "$f" ] || [ -r "$f" ] || { echo "env file $f is set but not readable"; exit 1; }
+done
+export LAFAZ_ENV_FILE LAFAZ_MAIL_ENV_FILE LAFAZ_NETWORK
 DC="docker compose -f compose.yaml"
 URL="https://$LAFAZ_DOMAIN"
 HOLDER=lafaz-undo

@@ -1,7 +1,7 @@
 """Everything /run/<id> shows, read from the database in one place.
 
 Columns: Heard (marked transcript), Understood (accepted items and open questions), Plan (approval cards, done
-steps with Undo, conflict cards). Below them, the trace drawer. A stopped run carries its handoff object.
+steps with Undo, conflict cards, the outbox with each email's delivery state). Below them, the trace drawer. A stopped run carries its handoff object.
 """
 
 from __future__ import annotations
@@ -10,6 +10,7 @@ import json
 import sqlite3
 
 from .. import config
+from ..mail import delivery
 from ..memory import conflicts
 from . import marks
 
@@ -91,6 +92,7 @@ def load(conn: sqlite3.Connection, run_id: int) -> dict | None:
         "tokens_out": sum(s["tokens_out"] or 0 for s in steps),
         "cost_usd": round(sum(s["cost_usd"] or 0 for s in steps), 4),
     }
+    outbox = [dict(m) for m in conn.execute("SELECT * FROM outbox WHERE run_id=? ORDER BY id", (run_id,))]
     return {
         "run": run,
         "segments": marks.paint(run["text"], items, questions),
@@ -100,6 +102,8 @@ def load(conn: sqlite3.Connection, run_id: int) -> dict | None:
         "approvals": _approvals(conn, run_id),
         "done_steps": _done_steps(steps),
         "cards": conflicts.open_cards(conn, run_id),
+        "outbox": outbox,
+        "mail_pending": any(m["status"] in delivery.WAITING for m in outbox),
         "steps": steps,
         "totals": totals,
     }

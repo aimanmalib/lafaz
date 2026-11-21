@@ -8,6 +8,7 @@ dalaman/
 *.db
 *.db-*
 deploy/hos.env
+deploy/*.env
 deploy/*_TAG
 # Not needed at run time.
 .git

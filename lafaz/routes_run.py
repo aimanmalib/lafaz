@@ -13,9 +13,10 @@ from fastapi import APIRouter, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from starlette.exceptions import HTTPException
 
-from . import budget, config, db, replay, runner
+from . import budget, config, db, owner, replay, runner
 from .agent import gate, loop
 from .agent.context import ActionError
+from .mail import delivery
 from .memory import conflicts
 from .view import run_view
 from .web import context, render, today
@@ -52,7 +53,7 @@ def start(request: Request, text: str = Form(""), meeting_date: str = Form(""), 
             return _home_error(request, text, meeting_date, refused, 503)
         mode = "replay" if cassette else "live"
         run_id = loop.start_run(conn, text, day, source if source in SOURCES else "wispr", lang, mode=mode,
-                                client_key=key)
+                                client_key=key, space=owner.space(request))
     finally:
         conn.close()
     runner.launch(run_id, text, day, llm=replay.llm_for(cassette) if cassette else None)
@@ -134,6 +135,8 @@ async def decide(request: Request, run_id: int, approval_id: int, decision: str)
             outcome = gate.approve(conn, approval_id, edited)
             if outcome.status == "failed":
                 error = ActionError(outcome.error or "failed")
+            else:
+                runner.spawn(delivery.dispatch)  # SMTP and the IMAP check run off the request
     except ActionError as exc:
         error = exc
     finally:
@@ -163,6 +166,8 @@ def resolve(request: Request, run_id: int, conflict_id: int, choice: str) -> Res
         outcome = conflicts.resolve(conn, conflict_id, choice)
         if outcome.status == "refused":
             error = ActionError(outcome.error or "refused")
+        else:
+            runner.spawn(delivery.dispatch)
     except ActionError as exc:
         error = exc
     finally:

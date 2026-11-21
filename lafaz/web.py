@@ -6,7 +6,7 @@ from fastapi import Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-from . import config, i18n
+from . import config, i18n, owner
 from .assets import asset_url
 from .config import REPO_ROOT
 from .memory import scheduler
@@ -30,6 +30,7 @@ def context(request: Request, **extra: object) -> dict:
         "t": i18n.Translator(lang),
         "rung_key": rung["levels"][str(rung["current"])],
         "max_chars": config.settings()["input"]["max_chars"],
+        "owner_space": owner.is_owner(request),
     }
     ctx.update(extra)
     return ctx

@@ -18,5 +18,6 @@
     {% endfor %}
   </ul>
   {% endif %}
+  {% if outbox %}{% include "partials/run/outbox.html" %}{% endif %}
   {% if not cards and not approvals and not done_steps and not run.active %}<p class="empty">{{ t('plan.nothing') }}</p>{% endif %}
 </section>

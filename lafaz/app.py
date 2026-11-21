@@ -10,8 +10,9 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from . import config, db, runner
+from . import config, db, owner, runner
 from .assets import STATIC_DIR
+from .mail import delivery
 from .memory import scheduler
 from .routes_eval import router as eval_router
 from .routes_run import router as run_router
@@ -22,6 +23,12 @@ from .web import context, render, today
 @contextlib.asynccontextmanager
 async def lifespan(app: FastAPI):
     runner.recover()
+    conn = db.connect()
+    try:
+        delivery.recover(conn)
+    finally:
+        conn.close()
+    runner.spawn(delivery.dispatch)
     task = asyncio.create_task(scheduler.loop())
     try:
         yield
@@ -63,6 +70,7 @@ def create_app() -> FastAPI:
 
     app.include_router(run_router)
     app.include_router(eval_router)
+    app.include_router(owner.router)
 
     @app.exception_handler(StarletteHTTPException)
     async def not_found(request: Request, exc: StarletteHTTPException):

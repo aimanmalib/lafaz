@@ -15,5 +15,6 @@ NEXT.md
 CLAUDE.md
 CLAUDE.local.md
 deploy/hos.env
+deploy/*.env
 deploy/CURRENT_TAG
 deploy/PREVIOUS_TAG

@@ -2,6 +2,7 @@
 {% block main %}
 <form class="dictate" method="post" action="/run?lang={{ lang }}">
   <h1 class="sr">{{ t('dictate.heading') }}</h1>
+  {% if owner_space %}<p class="owner-note" role="status">{{ t('space.owner_note') }}</p>{% endif %}
   {% if notice %}<p class="notice" role="status">{{ notice }}</p>{% endif %}
   {% include "partials/sheet.html" %}
   <div class="actions">

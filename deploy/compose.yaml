@@ -11,6 +11,9 @@ services:
     env_file:
       - path: ${LAFAZ_ENV_FILE:-lafaz.env}
         required: false
+      # SMTP login for the test inbox and the owner-space token. Without it every approved email stays in the outbox.
+      - path: ${LAFAZ_MAIL_ENV_FILE:-lafaz-mail.env}
+        required: false
     environment:
       LAFAZ_DB: /app/data/lafaz.db
       TZ: UTC
