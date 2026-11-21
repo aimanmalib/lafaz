@@ -2,6 +2,8 @@
 {% block main %}
 <div class="sheet sheet-plain">
   <h1>{{ t('error.not_found') }}</h1>
-  <p><a href="/">{{ t('site.title') }}</a></p>
+  <div class="actions">
+    <a class="btn btn-main" href="/">{{ t('error.back') }}</a>
+  </div>
 </div>
 {% endblock %}

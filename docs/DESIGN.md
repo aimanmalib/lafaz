@@ -55,6 +55,10 @@ Space: 4 px base; steps 4, 8, 12, 16, 24, 32, 48, 64. Radius: 2 px on the sheet 
 chips and the language switch (they are pills you tap), 6 px on buttons. Shadow: one, on the sheet only, `0 1px 0 var(--rule),
 0 12px 32px -16px` in ink at low alpha. Cards do not get shadows.
 
+Links. Inline text links are `--ink` with a 1 px underline in `--muted`, offset 0.2em; hover darkens the underline to `--ink`.
+Focus uses the global `--focus` ring, never a second ring. A link that is the main way forward on a page (the 404 "Back to
+dictation") is styled as a button (`a.btn`), not as a bare underlined link. No browser-default blue anywhere.
+
 ## Layout
 
 ```

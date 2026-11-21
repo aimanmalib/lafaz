@@ -22,5 +22,6 @@
   "run.empty": "Belum ada apa-apa untuk disusun. Dikte atau tampal apa yang diucapkan dahulu.",
   "footer.disclosure": "Dibina semasa NextGen AI Hackathon, 21 Nov 2026, oleh seorang yang mengarahkan ejen pengekodan AI.",
   "footer.source": "Kod sumber",
-  "error.not_found": "Halaman ini tidak wujud. Kembali ke kotak dikte."
+  "error.not_found": "Halaman ini tidak wujud.",
+  "error.back": "Kembali ke dikte"
 }

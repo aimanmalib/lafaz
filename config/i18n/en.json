@@ -22,5 +22,6 @@
   "run.empty": "There is nothing to plan yet. Dictate or paste what was said first.",
   "footer.disclosure": "Built during NextGen AI Hackathon, 21 Nov 2026, by one person directing AI coding agents.",
   "footer.source": "Source code",
-  "error.not_found": "This page does not exist. Go back to the dictation box."
+  "error.not_found": "This page does not exist.",
+  "error.back": "Back to dictation"
 }

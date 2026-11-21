@@ -168,9 +168,18 @@ main { flex: 1; width: 100%; max-width: var(--page); margin: 0 auto; padding: 0 
 }
 .count { font-variant-numeric: tabular-nums; }
 
+a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--muted); text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+a:hover { text-decoration-color: var(--ink); }
+a.btn:hover { text-decoration: none; }
+.btn-main:hover { color: var(--on-ink); }
+
 .actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-top: var(--sp-5); }
 .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-height: var(--tap);
+  text-decoration: none;
   padding: 0 var(--sp-5);
   border-radius: var(--r-btn);
   font: 700 var(--s-1)/1 var(--sans);

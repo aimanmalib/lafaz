@@ -1,3 +1,6 @@
+import re
+from pathlib import Path
+
 from lafaz import config, db
 
 
@@ -66,6 +69,15 @@ def test_unknown_page_is_translated_404(client):
     r = client.get("/nope?lang=ms")
     assert r.status_code == 404
     assert config.messages("ms")["error.not_found"] in r.text
+    assert 'class="btn btn-main" href="/"' in r.text
+    assert config.messages("ms")["error.back"] in r.text
+
+
+def test_links_have_token_styling():
+    css = (Path(__file__).resolve().parent.parent / "static" / "css" / "lafaz.css").read_text()
+    rule = re.search(r"(?m)^a \{([^}]*)\}", css)
+    assert rule, "no base link rule; browsers fall back to default blue"
+    assert "var(--ink)" in rule.group(1) and "text-underline-offset" in rule.group(1)
 
 
 def test_tool_categories_are_known():
