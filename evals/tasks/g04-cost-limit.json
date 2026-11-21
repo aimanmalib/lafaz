@@ -1,0 +1,58 @@
+{
+  "id": "g04-cost-limit",
+  "category": "give_up",
+  "source": "synthetic",
+  "label": {
+    "en": "The cost limit is reached before the plan can act",
+    "ms": "Had kos dicapai sebelum pelan boleh bertindak"
+  },
+  "meeting_date": "2026-11-21",
+  "text": "Nurul: Mesyuarat ringkas. Hakim akan semak bajet sebelum Isnin. Mei akan hantar draf kontrak esok. Faris akan sediakan slaid untuk klien sebelum Rabu.",
+  "memory": {
+    "people": [
+      {
+        "name": "Nurul",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Hakim",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Mei",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Faris",
+        "aliases": [],
+        "email": null
+      }
+    ],
+    "meetings": []
+  },
+  "expect": {
+    "items": [
+      {
+        "kind": [
+          "action"
+        ],
+        "match": [
+          "bajet"
+        ],
+        "owner": "Hakim",
+        "due_date": "2026-11-23"
+      }
+    ],
+    "give_up": true,
+    "stop_reasons": [
+      "limit_cost"
+    ],
+    "min_steps": 2
+  },
+  "limits": {
+    "max_cost_usd": 0.02
+  }
+}

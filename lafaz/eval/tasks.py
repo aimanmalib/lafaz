@@ -44,6 +44,17 @@ def _check_item(where: str, item: dict) -> None:
         date.fromisoformat(item["due_date"])
 
 
+def _check_limits(tid: str, limits) -> None:
+    """Optional per-task override of config run_limits, used by tasks that test a designed stop."""
+    if limits is None:
+        return
+    known = set(config.settings()["run_limits"])
+    if not isinstance(limits, dict) or not limits or set(limits) - known:
+        raise TaskError(f"{tid}: 'limits' keys must be some of {sorted(known)}")
+    if not all(isinstance(v, (int, float)) and not isinstance(v, bool) and v > 0 for v in limits.values()):
+        raise TaskError(f"{tid}: 'limits' values must be positive numbers")
+
+
 def validate(task: dict) -> dict:
     tid = task.get("id") or "?"
     for key in ("id", "category", "source", "label", "meeting_date", "text", "memory", "expect"):
@@ -58,6 +69,7 @@ def validate(task: dict) -> dict:
     if task["source"] not in SOURCES:
         raise TaskError(f"{tid}: unknown source {task['source']!r}")
     date.fromisoformat(task["meeting_date"])
+    _check_limits(tid, task.get("limits"))
     expect = task["expect"]
     extra = set(expect) - EXPECT_KEYS
     if extra:

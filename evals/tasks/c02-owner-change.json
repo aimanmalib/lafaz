@@ -1,0 +1,56 @@
+{
+  "id": "c02-owner-change",
+  "category": "conflict",
+  "source": "synthetic",
+  "label": {
+    "en": "A different person now owns the same work",
+    "ms": "Orang lain kini memiliki kerja yang sama"
+  },
+  "meeting_date": "2026-11-21",
+  "text": "Hakim: We agreed today that Mei owns the payroll migration from now on, and Faris helps with testing only.\nMei: Okay.",
+  "memory": {
+    "people": [
+      {
+        "name": "Hakim",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Faris",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Mei",
+        "aliases": [],
+        "email": null
+      }
+    ],
+    "meetings": [
+      {
+        "meeting_date": "2026-11-10",
+        "text": "Hakim: Decision: Faris owns the payroll migration until it is finished.",
+        "decisions": [
+          {
+            "text": "Faris owns the payroll migration",
+            "quote": "Faris owns the payroll migration"
+          }
+        ]
+      }
+    ]
+  },
+  "expect": {
+    "items": [
+      {
+        "kind": [
+          "decision"
+        ],
+        "match": [
+          "payroll"
+        ]
+      }
+    ],
+    "conflicts": 1,
+    "min_steps": 2
+  }
+}

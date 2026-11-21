@@ -1,0 +1,51 @@
+{
+  "id": "c04-rule-reversed",
+  "category": "conflict",
+  "source": "synthetic",
+  "label": {
+    "en": "A team rule is reversed",
+    "ms": "Peraturan pasukan diterbalikkan"
+  },
+  "meeting_date": "2026-11-21",
+  "text": "Aina: From next week the weekly team meetings are back on Fridays at 10, the sprint review needs everyone.\nMei: Fair enough.",
+  "memory": {
+    "people": [
+      {
+        "name": "Aina",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Mei",
+        "aliases": [],
+        "email": null
+      }
+    ],
+    "meetings": [
+      {
+        "meeting_date": "2026-11-07",
+        "text": "Aina: We decided there are no team meetings on Fridays, people need focus time.",
+        "decisions": [
+          {
+            "text": "No team meetings on Fridays",
+            "quote": "there are no team meetings on Fridays"
+          }
+        ]
+      }
+    ]
+  },
+  "expect": {
+    "items": [
+      {
+        "kind": [
+          "decision"
+        ],
+        "match": [
+          "fridays"
+        ]
+      }
+    ],
+    "conflicts": 1,
+    "min_steps": 2
+  }
+}

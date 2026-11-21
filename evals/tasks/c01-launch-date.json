@@ -1,0 +1,51 @@
+{
+  "id": "c01-launch-date",
+  "category": "conflict",
+  "source": "synthetic",
+  "label": {
+    "en": "A new launch date contradicts the remembered one",
+    "ms": "Tarikh pelancaran baharu bercanggah dengan yang diingati"
+  },
+  "meeting_date": "2026-11-21",
+  "text": "Aina: Change of plan, the product launch is now on the 12th of December because the hall fell through.\nFaris: Understood.",
+  "memory": {
+    "people": [
+      {
+        "name": "Aina",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Faris",
+        "aliases": [],
+        "email": null
+      }
+    ],
+    "meetings": [
+      {
+        "meeting_date": "2026-11-14",
+        "text": "Aina: We decided the product launch is on the 5th of December.\nFaris: Good, I'll book the hall.",
+        "decisions": [
+          {
+            "text": "The product launch is on 5 December",
+            "quote": "the product launch is on the 5th of December"
+          }
+        ]
+      }
+    ]
+  },
+  "expect": {
+    "items": [
+      {
+        "kind": [
+          "decision"
+        ],
+        "match": [
+          "launch"
+        ]
+      }
+    ],
+    "conflicts": 1,
+    "min_steps": 2
+  }
+}

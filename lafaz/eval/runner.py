@@ -70,7 +70,7 @@ def run_task(task: dict, workdir: Path, make_llm) -> dict:
         seed(conn, task["memory"])
         day = date.fromisoformat(task["meeting_date"])
         run_id = loop.start_run(conn, task["text"], day, MEETING_SOURCE[task["source"]], "en", title=task["id"])
-        loop.run(conn, run_id, task["text"], day, llm=make_llm())
+        loop.run(conn, run_id, task["text"], day, llm=make_llm(), limits=task.get("limits"))
         facts = collect(conn, run_id)
         facts["error"] = None
     except Exception as exc:  # noqa: BLE001 - the eval reports crashes, it does not hide them

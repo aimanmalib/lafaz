@@ -1,0 +1,62 @@
+{
+  "id": "x11-solo-dictation",
+  "category": "extraction",
+  "source": "synthetic",
+  "label": {
+    "en": "One person dictating notes with no speaker labels",
+    "ms": "Seorang merakam nota tanpa label penutur"
+  },
+  "meeting_date": "2026-11-21",
+  "text": "So, um, quick notes from today. Aina is booking the venue for the launch, by tomorrow. And, uh, Mei will design the poster by Friday, no wait, by Thursday.",
+  "memory": {
+    "people": [
+      {
+        "name": "Aina",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Mei",
+        "aliases": [],
+        "email": null
+      }
+    ],
+    "meetings": []
+  },
+  "expect": {
+    "items": [
+      {
+        "kind": [
+          "action"
+        ],
+        "match": [
+          "venue"
+        ],
+        "owner": "Aina",
+        "due_date": "2026-11-22"
+      },
+      {
+        "kind": [
+          "action"
+        ],
+        "match": [
+          "poster"
+        ],
+        "owner": "Mei",
+        "due_date": "2026-11-26"
+      }
+    ],
+    "corrections": [
+      {
+        "match": [
+          "poster"
+        ],
+        "due_date": "2026-11-26"
+      }
+    ],
+    "tools_required": [
+      "create_task"
+    ],
+    "min_steps": 3
+  }
+}

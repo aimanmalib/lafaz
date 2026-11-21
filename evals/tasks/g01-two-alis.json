@@ -1,0 +1,47 @@
+{
+  "id": "g01-two-alis",
+  "category": "give_up",
+  "source": "synthetic",
+  "label": {
+    "en": "Two people share the name given, so the owner is unclear",
+    "ms": "Dua orang berkongsi nama yang disebut, jadi pemilik kabur"
+  },
+  "meeting_date": "2026-11-21",
+  "text": "Mei: Ali will send the signed contract back to the landlord by Friday.\nMei: That is the last thing for this week.",
+  "memory": {
+    "people": [
+      {
+        "name": "Mei",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Ali Hassan",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Ali Rahman",
+        "aliases": [],
+        "email": null
+      }
+    ],
+    "meetings": []
+  },
+  "expect": {
+    "items": [
+      {
+        "match": [
+          "contract"
+        ],
+        "owner": null
+      }
+    ],
+    "questions_min": 1,
+    "give_up": true,
+    "stop_reasons": [
+      "missing_facts"
+    ],
+    "min_steps": 1
+  }
+}

@@ -7,6 +7,7 @@ from datetime import date
 import pytest
 
 from fakes import FakeClient, response, text, thinking, tool_use
+from lafaz import config
 from lafaz.eval import report, runner, score, tasks
 from lafaz.eval.__main__ import main, run_all, save
 from lafaz.llm import LLM
@@ -32,10 +33,12 @@ def fake_llm():
                           response([text("Done.")], stop_reason="end_turn")))
 
 
-def test_every_repo_task_file_is_valid_and_there_are_at_least_twelve():
+def test_every_repo_task_file_is_valid_and_the_prd_mix_is_there():
     found = tasks.load()
-    assert len(found) >= 12
-    assert {t["category"] for t in found} >= {"extraction", "adversarial"}
+    count = {c: sum(t["category"] == c for t in found) for c in tasks.CATEGORIES}
+    assert len(found) >= 24
+    assert count["extraction"] >= 12 and count["conflict"] >= 6
+    assert count["give_up"] >= 4 and count["adversarial"] >= 2
 
 
 @pytest.mark.parametrize("change, message", [
@@ -45,6 +48,10 @@ def test_every_repo_task_file_is_valid_and_there_are_at_least_twelve():
     (lambda t: t["expect"].update(tools_required=["record_items"]), "plan tool"),
     (lambda t: t["expect"].update(surprise=1), "unknown expect"),
     (lambda t: t["expect"]["items"][0].update(match=[]), "match"),
+    (lambda t: t.update(limits={"max_turns": 2}), "limits"),
+    (lambda t: t.update(limits={"max_steps": 0}), "limits"),
+    (lambda t: t.update(limits={"max_steps": True}), "limits"),
+    (lambda t: t.update(limits={}), "limits"),
 ])
 def test_bad_task_files_are_refused(change, message):
     task = json.loads(json.dumps(TASK))
@@ -69,6 +76,19 @@ def test_runner_scores_a_real_loop_run(tmp_path):
     assert row["violations"] == 0
     assert row["approvals_pending"] == 1
     assert row["steps_used"] == 3 and row["path_ratio"] == 1.5
+
+
+def test_task_limits_stop_the_run_and_leave_config_alone(tmp_path):
+    before = config.settings()["run_limits"].copy()
+    task = json.loads(json.dumps(TASK))
+    task["limits"] = {"max_steps": 2}
+    task["expect"].update(give_up=True, stop_reasons=["limit_steps"])
+    row = score.score_task(task, runner.run_task(task, tmp_path, fake_llm))
+    assert row["reason"] == "limit_steps"
+    assert row["steps_used"] == 2 and row["approvals_pending"] == 0
+    assert row["give_up_score"] == 2 and row["success"], row["checks"]
+    assert config.settings()["run_limits"] == before
+    assert score.score_task(TASK, runner.run_task(TASK, tmp_path / "plain", fake_llm))["reason"] == "finished"
 
 
 def test_seeded_memory_is_known_to_the_run(tmp_path):

@@ -31,9 +31,10 @@ class Budget:
     steps: int = 0
     cost_usd: float = 0.0
     started: float = field(default=0.0)
+    limits: dict | None = None
 
     def __post_init__(self):
-        self.limits = config.settings()["run_limits"]
+        self.limits = {**config.settings()["run_limits"], **(self.limits or {})}
         self.started = self.clock()
 
     def spend(self, cost: float) -> None:
@@ -130,9 +131,10 @@ def _listen(conn, run_id, text, meeting_date, people, llm, budget) -> ListenResu
 
 
 def run(conn: sqlite3.Connection, run_id: int, text: str, meeting_date: date, people: list[dict] | None = None,
-        llm: LLM | None = None, clock=time.monotonic) -> dict:
+        llm: LLM | None = None, clock=time.monotonic, limits: dict | None = None) -> dict:
+    """`limits` overrides some of config run_limits for this run only (eval tasks that test a stop)."""
     llm = llm or LLM()
-    budget = Budget(clock=clock)
+    budget = Budget(clock=clock, limits=limits)
     known = memory_people.all_people(conn) if people is None else people
     try:
         result = _listen(conn, run_id, text, meeting_date, known, llm, budget)

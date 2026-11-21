@@ -1,0 +1,73 @@
+{
+  "id": "g03-step-limit",
+  "category": "give_up",
+  "source": "synthetic",
+  "label": {
+    "en": "Too much to do inside the step limit",
+    "ms": "Terlalu banyak kerja untuk had langkah"
+  },
+  "meeting_date": "2026-11-21",
+  "text": "Hakim: Five things before the audit. Nurul will collect the receipts by Monday. Faris will update the asset list by Tuesday. Mei will check the bank statements by Wednesday. Aina will write the cover letter by Thursday. I will sign everything on Friday.",
+  "memory": {
+    "people": [
+      {
+        "name": "Hakim",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Nurul",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Faris",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Mei",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Aina",
+        "aliases": [],
+        "email": null
+      }
+    ],
+    "meetings": []
+  },
+  "expect": {
+    "items": [
+      {
+        "kind": [
+          "action"
+        ],
+        "match": [
+          "receipts"
+        ],
+        "owner": "Nurul",
+        "due_date": "2026-11-23"
+      },
+      {
+        "kind": [
+          "action"
+        ],
+        "match": [
+          "asset list"
+        ],
+        "owner": "Faris",
+        "due_date": "2026-11-24"
+      }
+    ],
+    "give_up": true,
+    "stop_reasons": [
+      "limit_steps"
+    ],
+    "min_steps": 3
+  },
+  "limits": {
+    "max_steps": 3
+  }
+}

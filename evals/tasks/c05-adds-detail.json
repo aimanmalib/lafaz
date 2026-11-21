@@ -1,0 +1,51 @@
+{
+  "id": "c05-adds-detail",
+  "category": "conflict",
+  "source": "synthetic",
+  "label": {
+    "en": "A new detail adds to the earlier decision, no conflict",
+    "ms": "Butiran baharu menambah keputusan lama, tiada percanggahan"
+  },
+  "meeting_date": "2026-11-21",
+  "text": "Faris: For the launch event at the city library, we decided the doors open at 7 pm.\nAina: Noted.",
+  "memory": {
+    "people": [
+      {
+        "name": "Faris",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Aina",
+        "aliases": [],
+        "email": null
+      }
+    ],
+    "meetings": [
+      {
+        "meeting_date": "2026-11-14",
+        "text": "Faris: We decided the launch event is at the city library on the 5th of December.",
+        "decisions": [
+          {
+            "text": "The launch event is at the city library on 5 December",
+            "quote": "the launch event is at the city library on the 5th of December"
+          }
+        ]
+      }
+    ]
+  },
+  "expect": {
+    "items": [
+      {
+        "kind": [
+          "decision"
+        ],
+        "match": [
+          "launch event"
+        ]
+      }
+    ],
+    "conflicts": 0,
+    "min_steps": 2
+  }
+}

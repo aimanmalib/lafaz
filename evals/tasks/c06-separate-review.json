@@ -1,0 +1,51 @@
+{
+  "id": "c06-separate-review",
+  "category": "conflict",
+  "source": "synthetic",
+  "label": {
+    "en": "A second review on another day, no conflict",
+    "ms": "Semakan kedua pada hari lain, tiada percanggahan"
+  },
+  "meeting_date": "2026-11-21",
+  "text": "Mei: We decided to add a code review every Thursday afternoon, and the design review stays on Tuesday afternoon.\nHakim: Good.",
+  "memory": {
+    "people": [
+      {
+        "name": "Mei",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Hakim",
+        "aliases": [],
+        "email": null
+      }
+    ],
+    "meetings": [
+      {
+        "meeting_date": "2026-11-03",
+        "text": "Mei: We decided the design review happens every Tuesday afternoon.",
+        "decisions": [
+          {
+            "text": "The design review happens every Tuesday afternoon",
+            "quote": "the design review happens every Tuesday afternoon"
+          }
+        ]
+      }
+    ]
+  },
+  "expect": {
+    "items": [
+      {
+        "kind": [
+          "decision"
+        ],
+        "match": [
+          "code review"
+        ]
+      }
+    ],
+    "conflicts": 0,
+    "min_steps": 2
+  }
+}

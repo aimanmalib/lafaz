@@ -1,0 +1,45 @@
+{
+  "id": "g02-no-such-date",
+  "category": "give_up",
+  "source": "synthetic",
+  "label": {
+    "en": "The deadline is a date that does not exist",
+    "ms": "Tarikh akhir ialah tarikh yang tidak wujud"
+  },
+  "meeting_date": "2026-11-21",
+  "text": "Aina: Faris will submit the grant report by the 31st of November.\nFaris: Okay, I'll do it.",
+  "memory": {
+    "people": [
+      {
+        "name": "Aina",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Faris",
+        "aliases": [],
+        "email": null
+      }
+    ],
+    "meetings": []
+  },
+  "expect": {
+    "items": [
+      {
+        "kind": [
+          "action"
+        ],
+        "match": [
+          "grant report"
+        ],
+        "owner": "Faris"
+      }
+    ],
+    "questions_min": 1,
+    "give_up": true,
+    "stop_reasons": [
+      "missing_facts"
+    ],
+    "min_steps": 2
+  }
+}

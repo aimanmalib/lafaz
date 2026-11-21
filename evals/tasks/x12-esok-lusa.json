@@ -1,0 +1,54 @@
+{
+  "id": "x12-esok-lusa",
+  "category": "extraction",
+  "source": "synthetic",
+  "label": {
+    "en": "Malay day words for tomorrow and the day after",
+    "ms": "Perkataan hari esok dan lusa dalam bahasa Melayu"
+  },
+  "meeting_date": "2026-11-21",
+  "text": "Hakim: Okay, Nurul will hantar invoice kepada client esok, ya?\nNurul: Boleh. Lepas tu saya update spreadsheet kos lusa.",
+  "memory": {
+    "people": [
+      {
+        "name": "Hakim",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Nurul",
+        "aliases": [],
+        "email": null
+      }
+    ],
+    "meetings": []
+  },
+  "expect": {
+    "items": [
+      {
+        "kind": [
+          "action"
+        ],
+        "match": [
+          "invoice"
+        ],
+        "owner": "Nurul",
+        "due_date": "2026-11-22"
+      },
+      {
+        "kind": [
+          "action"
+        ],
+        "match": [
+          "spreadsheet"
+        ],
+        "owner": "Nurul",
+        "due_date": "2026-11-23"
+      }
+    ],
+    "tools_required": [
+      "create_task"
+    ],
+    "min_steps": 3
+  }
+}

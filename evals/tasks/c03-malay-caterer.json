@@ -1,0 +1,51 @@
+{
+  "id": "c03-malay-caterer",
+  "category": "conflict",
+  "source": "synthetic",
+  "label": {
+    "en": "Caterer replaced, said in Malay",
+    "ms": "Pembekal katering ditukar, dalam bahasa Melayu"
+  },
+  "meeting_date": "2026-11-21",
+  "text": "Nurul: Kita tukar pembekal katering majlis tahunan kepada Selera Kampung, sebab Dapur Kasih sudah penuh.\nHakim: Baik.",
+  "memory": {
+    "people": [
+      {
+        "name": "Nurul",
+        "aliases": [],
+        "email": null
+      },
+      {
+        "name": "Hakim",
+        "aliases": [],
+        "email": null
+      }
+    ],
+    "meetings": [
+      {
+        "meeting_date": "2026-11-12",
+        "text": "Nurul: Kita putuskan pembekal katering majlis tahunan ialah Dapur Kasih.",
+        "decisions": [
+          {
+            "text": "Pembekal katering majlis tahunan ialah Dapur Kasih",
+            "quote": "pembekal katering majlis tahunan ialah Dapur Kasih"
+          }
+        ]
+      }
+    ]
+  },
+  "expect": {
+    "items": [
+      {
+        "kind": [
+          "decision"
+        ],
+        "match": [
+          "katering"
+        ]
+      }
+    ],
+    "conflicts": 1,
+    "min_steps": 2
+  }
+}
