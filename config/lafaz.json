@@ -42,5 +42,16 @@
   },
   "input": {
     "max_chars": 12000
+  },
+  "agent": {
+    "redact_keys": [
+      "password",
+      "secret",
+      "token",
+      "api_key",
+      "authorization"
+    ],
+    "reminder_max_days_before": 14,
+    "result_max_chars": 2000
   }
 }

@@ -28,7 +28,9 @@ def test_strict_schema_closes_every_object():
             for value in node:
                 walk(value)
 
-    walk(api_tool("record_items")["input_schema"])
+    for entry in config.tools():
+        if "input_schema" in entry:
+            walk(api_tool(entry["name"])["input_schema"])
 
 
 def test_tool_input_comes_back_as_a_dict_with_usage_and_cost():
@@ -55,3 +57,20 @@ def test_unusable_responses_raise_named_errors(resp, code):
 
 def test_unknown_model_costs_nothing_rather_than_a_made_up_number():
     assert estimate_cost("no-such-model", 1000, 1000) == 0.0
+
+
+def test_converse_offers_several_tools_and_returns_content_unchanged():
+    from fakes import thinking
+
+    blocks = [thinking(), tool_use("create_task", {"item_index": 0, "title": "x"})]
+    fake = FakeClient(response(blocks, tokens=(10, 5)))
+    turn = LLM(fake).converse("sys", [{"role": "user", "content": "hi"}], ["create_task", "send_summary"])
+    assert [t["name"] for t in fake.requests[0]["tools"]] == ["create_task", "send_summary"]
+    assert all(t["strict"] for t in fake.requests[0]["tools"])
+    assert turn.content == blocks and [u.name for u in turn.tool_uses] == ["create_task"]
+    assert turn.cost_usd == estimate_cost(turn.model, 10, 5)
+
+
+def test_converse_raises_on_refusal_before_reading_content():
+    with pytest.raises(LLMError, match="refusal"):
+        LLM(FakeClient(response([], stop_reason="refusal"))).converse("s", [], ["create_task"])

@@ -9,6 +9,20 @@ from . import config
 
 SCHEMA = Path(__file__).with_name("schema.sql")
 
+# Columns added after a table first shipped. ADD COLUMN never rebuilds a table, so existing rows stay as they are.
+ADDED_COLUMNS = {
+    "runs": {"handoff_json": "TEXT", "cost_usd": "REAL", "finished_at": "TEXT"},
+    "steps": {"status": "TEXT", "approval_id": "INTEGER", "undo_json": "TEXT"},
+}
+
+
+def _add_columns(conn: sqlite3.Connection) -> None:
+    for table, columns in ADDED_COLUMNS.items():
+        have = {row[1] for row in conn.execute(f"PRAGMA table_info({table})")}
+        for name, kind in columns.items():
+            if name not in have:
+                conn.execute(f"ALTER TABLE {table} ADD COLUMN {name} {kind}")
+
 
 def connect(path: Path | None = None) -> sqlite3.Connection:
     path = path or config.db_path()
@@ -25,6 +39,7 @@ def init(path: Path | None = None) -> None:
     conn = connect(path)
     try:
         conn.executescript(SCHEMA.read_text(encoding="utf-8"))
+        _add_columns(conn)
         conn.commit()
     finally:
         conn.close()

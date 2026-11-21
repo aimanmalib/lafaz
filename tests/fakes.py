@@ -3,8 +3,16 @@
 from types import SimpleNamespace
 
 
-def tool_use(name, payload):
-    return SimpleNamespace(type="tool_use", id="toolu_fake", name=name, input=payload)
+def tool_use(name, payload, id="toolu_fake"):
+    return SimpleNamespace(type="tool_use", id=id, name=name, input=payload)
+
+
+def text(value):
+    return SimpleNamespace(type="text", text=value)
+
+
+def thinking():
+    return SimpleNamespace(type="thinking", thinking="", signature="sig")
 
 
 def response(content, stop_reason="tool_use", model="claude-sonnet-5-5", tokens=(1000, 200), stop_details=None):

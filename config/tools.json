@@ -1,5 +1,5 @@
 {
-  "_note": "Single source of truth for what each tool may do. The agent loop reads 'kategori' (permission category); nothing in code hard-codes it.",
+  "_note": "Single source of truth for what each tool may do. The agent loop reads 'kategori' (permission category); nothing in code hard-codes it. Tools with stage 'plan' are offered to the agent loop.",
   "tools": [
     {
       "name": "record_items",
@@ -138,37 +138,157 @@
       "name": "create_task",
       "kategori": "reversible",
       "enabled": true,
-      "description": "Create a task on the internal board in the To do column. Can be undone."
+      "description": "Create one task on the internal board from an accepted action item. Owner, due date and quote are taken from that item by code. Can be undone.",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "item_index",
+          "title"
+        ],
+        "properties": {
+          "item_index": {
+            "type": "integer",
+            "description": "Index of the accepted action item in the Understood list."
+          },
+          "title": {
+            "type": "string",
+            "description": "Short task title in the language of the input."
+          }
+        }
+      },
+      "stage": "plan"
     },
     {
       "name": "preview_summary",
       "kategori": "reversible",
       "enabled": true,
-      "description": "Draft the weekly digest for one person. Nothing is sent."
+      "description": "Draft the weekly digest for one person who owns an item in this meeting. Nothing is sent. Can be undone.",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "person",
+          "body"
+        ],
+        "properties": {
+          "person": {
+            "type": "string",
+            "description": "Name exactly as listed in the Understood items."
+          },
+          "body": {
+            "type": "string",
+            "description": "The digest text."
+          }
+        }
+      },
+      "stage": "plan"
     },
     {
       "name": "publish_to_board",
       "kategori": "irreversible",
       "enabled": true,
-      "description": "Publish tasks to the shared team board where others see them."
+      "description": "Publish tasks created in this run to the shared team board where others see them. Needs a person's approval.",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "task_ids"
+        ],
+        "properties": {
+          "task_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "description": "Ids returned by create_task in this run."
+          }
+        }
+      },
+      "stage": "plan"
     },
     {
       "name": "send_reminder",
       "kategori": "irreversible",
       "enabled": true,
-      "description": "Email a reminder to the task owner before the deadline."
+      "description": "Email a reminder to the owner of a task before its due date. Needs a person's approval.",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "task_id",
+          "days_before",
+          "message"
+        ],
+        "properties": {
+          "task_id": {
+            "type": "integer"
+          },
+          "days_before": {
+            "type": "integer",
+            "description": "Whole days before the due date."
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "stage": "plan"
     },
     {
       "name": "send_summary",
       "kategori": "irreversible",
       "enabled": true,
-      "description": "Email the weekly digest to one person."
+      "description": "Email the weekly digest to one person. Needs a person's approval.",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "person",
+          "subject",
+          "body"
+        ],
+        "properties": {
+          "person": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          }
+        }
+      },
+      "stage": "plan"
     },
     {
       "name": "ask_team",
       "kategori": "irreversible",
       "enabled": true,
-      "description": "Email the team to resolve a conflict between two decisions."
+      "description": "Email the team to settle an open question, quoting the words that raised it. Needs a person's approval.",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "subject",
+          "body",
+          "quote"
+        ],
+        "properties": {
+          "subject": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "quote": {
+            "type": "string",
+            "description": "Exact span from the input, at least three words."
+          }
+        }
+      },
+      "stage": "plan"
     }
   ]
 }

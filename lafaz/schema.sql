@@ -63,3 +63,53 @@ CREATE TABLE IF NOT EXISTS questions (
     quote TEXT,
     UNIQUE (run_id, seq)
 );
+
+-- Agent loop and approvals (B2). The loop never runs an irreversible tool; it files an approval that only a person
+-- can approve, and code then runs the action.
+CREATE TABLE IF NOT EXISTS tasks (
+    id INTEGER PRIMARY KEY,
+    run_id INTEGER NOT NULL REFERENCES runs(id),
+    item_seq INTEGER,
+    title TEXT NOT NULL,
+    owner TEXT,
+    due_date TEXT,
+    quote TEXT,
+    status TEXT NOT NULL DEFAULT 'todo' CHECK (status IN ('todo', 'doing', 'done', 'undone')),
+    published INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
+);
+
+CREATE TABLE IF NOT EXISTS drafts (
+    id INTEGER PRIMARY KEY,
+    run_id INTEGER NOT NULL REFERENCES runs(id),
+    person TEXT NOT NULL,
+    body TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'discarded')),
+    created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
+);
+
+CREATE TABLE IF NOT EXISTS approvals (
+    id INTEGER PRIMARY KEY,
+    run_id INTEGER NOT NULL REFERENCES runs(id),
+    step_seq INTEGER NOT NULL,
+    tool TEXT NOT NULL,
+    arguments_json TEXT NOT NULL,
+    diff_json TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'skipped', 'failed')),
+    edited INTEGER NOT NULL DEFAULT 0,
+    result_json TEXT,
+    created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
+    decided_at TEXT
+);
+
+CREATE TABLE IF NOT EXISTS outbox (
+    id INTEGER PRIMARY KEY,
+    run_id INTEGER NOT NULL REFERENCES runs(id),
+    approval_id INTEGER REFERENCES approvals(id),
+    tool TEXT NOT NULL,
+    recipient TEXT NOT NULL,
+    subject TEXT NOT NULL,
+    body TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'queued',
+    created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
+);

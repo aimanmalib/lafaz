@@ -77,3 +77,28 @@ Short records of choices made while building Lafaz. Newest last. Each one says w
 - Why: a quote that code can find in the input is the proof a judge can check. Dates and owners decided by code are
   repeatable and testable without a model.
 - Undo: `lafaz/listen/` is self-contained; the word lists and the minimum quote length are config.
+
+## D8. Agent loop: a manual tool loop with a permission gate read from config (21 Nov, 17:40 MYT)
+
+- What: `lafaz/agent/` runs one listen call, then a manual Messages API tool loop over the tools marked
+  `"stage": "plan"` in `config/tools.json`. Every tool call goes through `lafaz/agent/gate.py`, which reads only
+  `kategori`:
+  - `read` and `reversible` run; reversible steps keep an undo record (`gate.undo`). A task already published to the
+    shared board cannot be undone.
+  - `irreversible` never runs from the loop. It becomes a row in `approvals` with a readable diff, and the model is told
+    it is waiting. Only `gate.approve` (a person's click) runs it, after checking the arguments again; an edit is
+    checked against the same schema; `gate.skip` runs nothing.
+  - Owners, dates and recipients come from the checked items, not from the model's arguments. `ask_team` needs a quote
+    that code finds in the meeting text.
+  - Limits (`run_limits` in `config/lafaz.json`: steps, seconds, cost) are checked before each model call and each
+    tool call. Hitting one, a model error, nothing heard, or open questions end the run with a handoff object
+    `{reason, done, not_done, questions, quotes}` stored on the run.
+  - Every step goes to `steps` with category, arguments (keys in `agent.redact_keys` hidden), result, time, tokens and
+    cost. Model turns are steps with category `model`.
+  - Email actions write to `outbox` with status `queued`; delivery belongs to the integration layer.
+- Why a manual loop rather than the SDK tool runner: the loop must stop on cost and time between calls, record each
+  step, and turn some calls into approvals instead of results. The assistant turn is appended unchanged (thinking
+  blocks included) and all tool results of a turn go back in one user message, as the API reference requires.
+- Measured: one live run on the synthetic sample created 2 tasks and filed 4 approvals (2 reminders, 1 team question,
+  1 publish), sent nothing, took about 37 s and cost USD 0.033 by `config/prices.json`.
+- Undo: the gate is one module; changing a tool's `kategori` in config changes its behaviour without code.
