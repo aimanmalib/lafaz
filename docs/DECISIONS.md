@@ -44,3 +44,13 @@ Short records of choices made while building Lafaz. Newest last. Each one says w
   the cookie for a year.
 - Why: a judge can share a link in either language, and the choice sticks while they click around.
 - Undo: change `lang_cookie_days` or remove the cookie write in `lafaz/app.py`.
+
+## D6. One container behind the host proxy (21 Nov, 16:15 MYT)
+
+- What: `deploy/deploy.sh` builds HEAD from a clean `git archive`, runs one read-only container (0.75 CPU, 384 MB) with
+  the SQLite file on the named volume `lafaz-data`, and installs a Traefik file route with `compress`. HTML carries
+  `Cache-Control: no-cache, no-transform` so the CDN does not recompress it. Host values sit in `deploy/hos.env` and the
+  deploy tags in `deploy/*_TAG`, both untracked. Keys reach the container only through the optional `LAFAZ_ENV_FILE`.
+- Why: a single small process is enough for a judged demo, and a clean archive guarantees that ignored files (keys,
+  state, notes) never reach the image.
+- Undo: `deploy/deploy.sh --rollback` runs the previous image, which a stopped `lafaz-undo` container holds.
