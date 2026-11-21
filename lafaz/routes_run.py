@@ -60,10 +60,18 @@ def start(request: Request, text: str = Form(""), meeting_date: str = Form(""), 
     return RedirectResponse(f"/run/{run_id}", status_code=303)
 
 
+def _visible(conn, request: Request, run_id: int) -> None:
+    """Owner runs exist only for the owner: anyone else gets 404 on the page and on every button (PRD 4.7)."""
+    row = conn.execute("SELECT space FROM runs WHERE id=?", (run_id,)).fetchone()
+    if row is None or (row[0] == "owner" and not owner.is_owner(request)):
+        raise HTTPException(404)
+
+
 def _view(request: Request, run_id: int, notice: str | None = None, partial: bool = False,
           status_code: int = 200) -> HTMLResponse:
     conn = db.connect()
     try:
+        _visible(conn, request, run_id)
         data = run_view.load(conn, run_id)
     finally:
         conn.close()
@@ -127,6 +135,7 @@ async def decide(request: Request, run_id: int, approval_id: int, decision: str)
     conn = db.connect()
     error = None
     try:
+        _visible(conn, request, run_id)
         _owned(conn, "approvals", approval_id, run_id)
         if decision == "skip":
             gate.skip(conn, approval_id)
@@ -149,6 +158,7 @@ def undo(request: Request, run_id: int, seq: int) -> Response:
     conn = db.connect()
     error = None
     try:
+        _visible(conn, request, run_id)
         gate.undo(conn, run_id, seq)
     except ActionError as exc:
         error = exc
@@ -162,6 +172,7 @@ def resolve(request: Request, run_id: int, conflict_id: int, choice: str) -> Res
     conn = db.connect()
     error = None
     try:
+        _visible(conn, request, run_id)
         _owned(conn, "conflicts", conflict_id, run_id)
         outcome = conflicts.resolve(conn, conflict_id, choice)
         if outcome.status == "refused":

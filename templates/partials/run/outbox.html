@@ -4,7 +4,7 @@
   {% for m in outbox %}
   <li class="mail" id="mail-{{ m.id }}">
     <p class="mail-head"><span class="tool">{{ t('tool.' ~ m.tool) }}</span> <span class="mail-state mail-{{ m.status }}">{{ t('outbox.status.' ~ m.status) }}</span></p>
-    <p>{{ t('outbox.to', name=m.recipient) }}{% if m.address %} <span class="muted">{{ m.address }}</span>{% endif %}</p>
+    <p>{{ t('outbox.to', name=m.recipient) }}{% if m.address and owner_space %} <span class="muted">{{ m.address }}</span>{% endif %}</p>
     <p class="mail-subject">{{ m.subject }}</p>
     {% if m.label %}<p class="muted">{{ t('outbox.label.' ~ m.label) }}</p>{% endif %}
   </li>

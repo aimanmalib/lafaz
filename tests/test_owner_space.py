@@ -66,10 +66,46 @@ def test_approving_an_email_hands_it_to_delivery_and_the_page_shows_the_outbox(c
     assert 'hx-trigger="every' not in page
 
 
-def test_delivered_badge_and_address_on_the_run_page(client, live):
+def _owner_run(client, token):
+    client.get(f"/owner/{token}", follow_redirects=False)
+    url = start(client)
+    run_id, aid, a_url = _approval_url(url)
+    return url, run_id, aid, a_url
+
+
+def test_a_visitor_without_the_cookie_cannot_see_or_approve_an_owner_run(client, token, live, monkeypatch):
+    url, run_id, aid, a_url = _owner_run(client, token)
+    client.cookies.clear()
+    handed, sent = [], []
+    monkeypatch.setattr(runner, "spawn", handed.append)
+    monkeypatch.setattr("lafaz.mail.transport.send", lambda *a, **k: sent.append(a))
+    assert client.get(url).status_code == 404
+    assert client.get(url + "/body").status_code == 404
+    for path in ("/approve", "/edit", "/skip"):
+        assert client.post(a_url + path, headers={"HX-Request": "true"}).status_code == 404
+    assert client.post(f"{url}/steps/1/undo").status_code == 404
+    assert client.post(f"{url}/conflicts/1/replace").status_code == 404
+    c = db.connect()
+    assert c.execute("SELECT COUNT(*) FROM outbox WHERE run_id=?", (run_id,)).fetchone()[0] == 0
+    assert c.execute("SELECT status FROM approvals WHERE id=?", (aid,)).fetchone()[0] == "pending"
+    assert handed == [] and sent == []
+    client.get(f"/owner/{token}", follow_redirects=False)  # the owner still can
+    assert client.get(url).status_code == 200
+
+
+def test_public_run_pages_never_show_an_address(client, live):
     client.cookies.clear()
     url = start(client)
     run_id, aid, a_url = _approval_url(url)
+    client.post(a_url + "/approve")
+    conn = db.connect()
+    conn.execute("UPDATE outbox SET address='inbox+faris@example.test' WHERE run_id=?", (run_id,))
+    conn.commit()
+    assert "inbox+faris@example.test" not in client.get(url).text
+
+
+def test_delivered_badge_and_address_on_the_run_page(client, token, live):
+    url, run_id, aid, a_url = _owner_run(client, token)
     client.post(a_url + "/approve")
     conn = db.connect()
     conn.execute("UPDATE outbox SET status='delivered', address='inbox+faris@example.test' WHERE run_id=?", (run_id,))
