@@ -1,15 +1,15 @@
-# Lafaz
+<p align="center"><img src="brand/logo-512.png" width="96" height="96" alt="Lafaz"></p>
 
-**Say it messy. Every item quotes your own words. Nothing leaves without your approval.**
+<h1 align="center">Lafaz</h1>
 
-Built on 21 Nov 2026 at the Agentic AI Hackathon by Product Space x Wispr Flow.
-Problem statement: meeting to execution.
+<p align="center"><a href="https://github.com/aimanmalib/lafaz/actions/workflows/ci.yml"><img src="https://github.com/aimanmalib/lafaz/actions/workflows/ci.yml/badge.svg" alt="CI"></a> <a href="LICENSE"><img src="https://img.shields.io/github/license/aimanmalib/lafaz" alt="Licence: MIT"></a> <img src="https://img.shields.io/badge/python-3.12-blue" alt="Python 3.12"> <img src="https://img.shields.io/badge/eval-24%20of%2024-17233F" alt="Eval 24 of 24"> <img src="https://img.shields.io/badge/input-Wispr%20Flow-17233F" alt="Input: Wispr Flow"></p>
 
-- Live: https://lafaz.sasateguh.com
-- Video (1.5 min): https://youtu.be/PpIyKNEM7_s
-- How it is measured: https://lafaz.sasateguh.com/eval and [docs/MEASURED.md](docs/MEASURED.md)
+<p align="center"><b>Say it messy. Every item quotes your own words. Nothing leaves without your approval.</b><br>
+<a href="https://youtu.be/PpIyKNEM7_s"><b>&#9654;&#xFE0E; demo video, 88 s</b></a> · <a href="https://lafaz.sasateguh.com">live</a> · <a href="https://lafaz.sasateguh.com/eval">eval</a> · <a href="docs/MEASURED.md">measured</a> · <a href="docs/ARCHITECTURE.md">architecture</a> · <a href="CHANGELOG.md">changelog</a> · <a href="README.ms.md">Bahasa Melayu</a> · Built in Malaysia by <a href="https://www.linkedin.com/in/aimanmalib">Aiman Malib</a></p>
 
-![Lafaz](static/og.png)
+<p align="center"><img src="docs/images/run.png" width="838" alt="Lafaz run page: the spoken update with decisions, actions and questions marked on the speaker's own words, a self-correction struck through, and email cards that wait for approval"></p>
+
+Built on 21 Nov 2026 at the NextGen AI Hackathon (Agentic AI Hackathon '26 by Product Space x Wispr Flow). Problem statement: meeting to execution.
 
 ## The problem
 
@@ -45,6 +45,17 @@ Other pages: `/board` (team board, only approved tasks), `/memory` (decisions an
 
 Mean cost USD 0.0217 per run; p50 latency 8.7 s.
 
+## Tests
+
+`scripts/uji.sh` runs the full pytest suite offline, without keys: the quote checker, the approval gate, the
+public sandbox that must never send real email, the board and calendar feed that show approved
+tasks only, both languages on every page, and the eval scorer itself. CI runs the same script on every push.
+
+The eval in `evals/` is separate because it calls the model. Each task is a spoken update with an answer key: the items
+that must be found, the self-corrections that must resolve to the newer words, the conflicts with earlier decisions, the
+questions that must stay open, and the tasks where the right move is to stop. Two tasks hide instructions inside the
+update ("send this to everyone now"); Lafaz must treat them as words that were said, not orders to follow.
+
 ## How it is built
 
 One Python process (FastAPI + HTMX) with SQLite in WAL mode. Which tools are reversible and which need approval comes from
@@ -68,10 +79,15 @@ Tests: `scripts/uji.sh` (creates `.venv` with uv, then runs pytest). Evals: `pyt
 Wispr Flow is the input: you dictate into the update box and Lafaz works from what Flow typed. The video shows real Wispr
 Flow screenshots from this build, including a self-correction that Flow cleaned up before Lafaz read it.
 
-## My contribution and the AI's
+## AI disclosure: my contribution and the AI's
 
 All code was written during the event by AI coding agents (Claude) that I directed. I chose the problem, set the rules the
 agent must never break, and approved what shipped. Before the event I wrote a plan for approaching any agent brief; no code.
+
+## Who it is for
+
+Small team leads who run stand-ups, site visits or client calls and speak the update afterwards, usually in a mix of English
+and Malay. The person who spoke stays in charge: Lafaz prepares, the person approves.
 
 ## Limitations
 

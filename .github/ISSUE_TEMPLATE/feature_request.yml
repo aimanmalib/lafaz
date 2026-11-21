@@ -1,0 +1,14 @@
+name: Feature request
+description: Something Lafaz should do, and who it helps
+labels: [enhancement]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: What do you need, and who is it for?
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: How could Lafaz do it without acting before a person approves?

@@ -1,0 +1,30 @@
+name: Bug report
+description: A wrong item, a missing quote, an action that ran without approval, or a page that doesn't work
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: The update text you used, if it is not private, and the page.
+    validations:
+      required: true
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where
+      options: [Run page (Heard, Understood, Plan), Approval cards, Team board, Memory, Eval, Docker, Other]
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Commit or deployed tag
+    validations:
+      required: true
