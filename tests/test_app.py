@@ -72,4 +72,4 @@ def test_tool_categories_are_known():
     allowed = {"read", "reversible", "irreversible"}
     names = [t["name"] for t in config.tools()]
     assert len(names) == len(set(names))
-    assert all(t["category"] in allowed for t in config.tools())
+    assert all(t["kategori"] in allowed for t in config.tools())

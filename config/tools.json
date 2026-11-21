@@ -1,21 +1,21 @@
 {
-  "_note": "Single source of truth for what each tool may do. The agent loop reads 'category'; nothing in code hard-codes it.",
+  "_note": "Single source of truth for what each tool may do. The agent loop reads 'kategori' (permission category); nothing in code hard-codes it.",
   "tools": [
-    {"name": "record_items", "category": "read", "enabled": true,
+    {"name": "record_items", "kategori": "read", "enabled": true,
      "description": "Record decisions, action items, questions and facts heard in the input, each with exact quotes."},
-    {"name": "judge_conflict", "category": "read", "enabled": true,
+    {"name": "judge_conflict", "kategori": "read", "enabled": true,
      "description": "Decide whether a new decision contradicts an earlier active decision, quoting both."},
-    {"name": "create_task", "category": "reversible", "enabled": true,
+    {"name": "create_task", "kategori": "reversible", "enabled": true,
      "description": "Create a task on the internal board in the To do column. Can be undone."},
-    {"name": "preview_summary", "category": "reversible", "enabled": true,
+    {"name": "preview_summary", "kategori": "reversible", "enabled": true,
      "description": "Draft the weekly digest for one person. Nothing is sent."},
-    {"name": "publish_to_board", "category": "irreversible", "enabled": true,
+    {"name": "publish_to_board", "kategori": "irreversible", "enabled": true,
      "description": "Publish tasks to the shared team board where others see them."},
-    {"name": "send_reminder", "category": "irreversible", "enabled": true,
+    {"name": "send_reminder", "kategori": "irreversible", "enabled": true,
      "description": "Email a reminder to the task owner before the deadline."},
-    {"name": "send_summary", "category": "irreversible", "enabled": true,
+    {"name": "send_summary", "kategori": "irreversible", "enabled": true,
      "description": "Email the weekly digest to one person."},
-    {"name": "ask_team", "category": "irreversible", "enabled": true,
+    {"name": "ask_team", "kategori": "irreversible", "enabled": true,
      "description": "Email the team to resolve a conflict between two decisions."}
   ]
 }
