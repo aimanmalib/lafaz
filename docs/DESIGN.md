@@ -40,8 +40,9 @@ Colour (light). Every colour in CSS comes from these custom properties; no raw h
 | `--focus` | `#2B5BD7` | Keyboard focus ring. |
 
 Dark mode (`prefers-color-scheme: dark`): `--ink #E6ECF7`, `--sheet #18213A`, `--desk #10172A`, `--rule #2F3B58`, `--muted #A5B0C7`,
-`--seal #FF8A7A`, `--focus #8FB0FF`. Marker colours stay the same hue but are used as a translucent underlay (mix 45 %) so text keeps
-contrast on the dark sheet.
+`--seal #FF8A7A`, `--focus #8FB0FF`. Marker colours stay the same hue but are used as a translucent underlay (45 % alpha, tokens `--mk-*`) so text keeps
+contrast on the dark sheet. `<mark>` needs `background-color: transparent`: without it the browser's
+default yellow shows through the translucent marks and the words become unreadable (seen on iPhone and Chromium, B4).
 
 Type.
 
@@ -79,7 +80,9 @@ desktop /run/<id> (B4)
 ```
 
 Left aligned throughout. The sheet is centred on the desk with a max width of 46rem on `/`; on `/run` the three columns share
-the desk and Heard keeps the serif. On phones the columns stack in reading order Heard, Understood, Plan.
+the desk and Heard keeps the serif. On phones the columns stack in reading order Heard, Understood, Plan. On desktop the Heard column stays in view
+(sticky, scrolls inside itself when the transcript is taller than the window) so a card can be read beside the words behind it.
+The trace drawer is a closed `<details>` under the columns; its table scrolls inside its own box on narrow screens.
 
 ## Motion
 

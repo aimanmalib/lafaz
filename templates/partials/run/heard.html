@@ -1,0 +1,7 @@
+<section class="col heard" aria-labelledby="heard-h">
+  <h2 id="heard-h">{{ t('run.heard') }}</h2>
+  <div class="sheet transcript">{% for seg in segments %}{% if seg.corrected %}<s class="corrected">{{ seg.text }}</s>{% if seg.correction_ends %}<span class="corrected-label">{{ t('run.corrected') }}</span>{% endif %}{% elif seg.kind %}<mark class="mk mk-{{ seg.kind }}" style="--i: {{ seg.order }}">{{ seg.text }}</mark>{% else %}{{ seg.text }}{% endif %}{% for n in seg.ends %}<sup class="ref" aria-hidden="true">{{ n }}</sup>{% endfor %}{% endfor %}</div>
+  <ul class="legend" aria-label="{{ t('run.legend') }}">
+    {% for kind in ['decision', 'action', 'question', 'fact'] %}<li><span class="swatch mk-{{ kind }}"></span>{{ t('kind.' ~ kind) }}</li>{% endfor %}
+  </ul>
+</section>

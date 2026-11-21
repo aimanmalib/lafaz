@@ -1,6 +1,6 @@
 <div class="sheet" id="sheet">
   <label class="sheet-label" for="text">{{ t('dictate.label') }}</label>
-  {% if sample %}<p class="sample-label">{{ t('sample.label') }}</p>{% endif %}
+  {% if sample %}<p class="sample-label">{{ t('sample.label') }}</p><input type="hidden" name="source" value="sample">{% endif %}
   <textarea id="text" name="text" rows="9" maxlength="{{ max_chars }}" placeholder="{{ t('dictate.placeholder') }}" data-count-template="{{ t('dictate.count') }}" aria-describedby="count">{{ text }}</textarea>
   <div class="sheet-meta">
     <label class="date">{{ t('dictate.date') }} <input type="date" name="meeting_date" value="{{ meeting_date }}"></label>

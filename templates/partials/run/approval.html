@@ -1,0 +1,42 @@
+{% set url = base ~ '/approvals/' ~ a.id %}
+<article class="card{% if a.status == 'pending' %} card-seal{% endif %}" id="approval-{{ a.id }}" aria-labelledby="approval-{{ a.id }}-h">
+  <h3 id="approval-{{ a.id }}-h">{{ t('tool.' ~ a.tool) }}</h3>
+  {% if a.status == 'pending' %}<p class="seal-note">{{ t('plan.needs_you') }}</p>{% endif %}
+  <dl class="diff">
+    {% for c in a.diff.changes %}
+    {% set fkey = 'field.' ~ c.field %}
+    <div class="diff-row">
+      <dt>{{ t(fkey) if t.has(fkey) else c.field }}</dt>
+      <dd>{% if c.before is not none %}<del>{{ c.before }}</del> {% endif %}<ins>{{ c.after }}</ins></dd>
+    </div>
+    {% endfor %}
+  </dl>
+  {% if a.status == 'pending' %}
+  <div class="card-actions">
+    <form method="post" action="{{ url }}/approve" hx-post="{{ url }}/approve?lang={{ lang }}" hx-target="#run" hx-swap="outerHTML">
+      <button type="submit" class="btn btn-seal">{{ t('plan.approve') }}</button>
+    </form>
+    <form method="post" action="{{ url }}/skip" hx-post="{{ url }}/skip?lang={{ lang }}" hx-target="#run" hx-swap="outerHTML">
+      <button type="submit" class="btn btn-quiet">{{ t('plan.skip') }}</button>
+    </form>
+  </div>
+  {% if a.fields %}
+  <details class="edit">
+    <summary>{{ t('plan.edit') }}</summary>
+    <form method="post" action="{{ url }}/edit" hx-post="{{ url }}/edit?lang={{ lang }}" hx-target="#run" hx-swap="outerHTML">
+      {% for f in a.fields %}
+      {% set fkey = 'field.' ~ f.name %}
+      <label class="field">{{ t(fkey) if t.has(fkey) else f.name }}
+        {% if f.type == 'integer' %}<input type="number" name="{{ f.name }}" value="{{ a.arguments[f.name] }}">
+        {% elif f.name in ('body', 'message') %}<textarea name="{{ f.name }}" rows="5">{{ a.arguments[f.name] }}</textarea>
+        {% else %}<input type="text" name="{{ f.name }}" value="{{ a.arguments[f.name] }}">{% endif %}
+      </label>
+      {% endfor %}
+      <button type="submit" class="btn btn-seal">{{ t('plan.approve_edited') }}</button>
+    </form>
+  </details>
+  {% endif %}
+  {% else %}
+  <p class="status status-{{ a.status }}">{{ t('approval.' ~ a.status) }}{% if a.edited %} {{ t('approval.edited') }}{% endif %}</p>
+  {% endif %}
+</article>

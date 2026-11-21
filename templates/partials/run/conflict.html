@@ -1,0 +1,20 @@
+{% set url = base ~ '/conflicts/' ~ card.id %}
+<article class="card conflict" id="conflict-{{ card.id }}" aria-labelledby="conflict-{{ card.id }}-h">
+  <h3 id="conflict-{{ card.id }}-h">{{ t('conflict.heading') }}</h3>
+  <div class="versus">
+    <div><p class="muted">{{ t('conflict.earlier', date=card.old_date) }}</p><blockquote class="quote">{{ card.old_quote }}</blockquote></div>
+    <div><p class="muted">{{ t('conflict.now', date=card.new_date) }}</p><blockquote class="quote">{{ card.new_quote }}</blockquote></div>
+  </div>
+  {% if card.reason %}<p class="muted">{{ card.reason }}</p>{% endif %}
+  {% if card.status == 'open' %}
+  <div class="card-actions">
+    {% for choice in ['replace', 'keep', 'ask'] %}
+    <form method="post" action="{{ url }}/{{ choice }}" hx-post="{{ url }}/{{ choice }}?lang={{ lang }}" hx-target="#run" hx-swap="outerHTML">
+      <button type="submit" class="btn {{ 'btn-main' if choice == 'replace' else 'btn-quiet' }}">{{ t('conflict.choice.' ~ choice) }}</button>
+    </form>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="status">{{ t('conflict.status.' ~ card.status) }}</p>
+  {% endif %}
+</article>

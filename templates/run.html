@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}{{ t('run.page_title', id=run.id) }} | {{ t('site.title') }}{% endblock %}
+{% block bodyclass %}page wide{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ asset('css/run.css') }}">{% endblock %}
+{% block main %}
+{% include "partials/run_body.html" %}
+{% endblock %}

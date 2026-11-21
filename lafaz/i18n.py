@@ -27,6 +27,9 @@ class Translator:
         self._messages = config.messages(lang)
         self._fallback = config.messages(default_lang())
 
+    def has(self, key: str) -> bool:
+        return key in self._messages or key in self._fallback
+
     def __call__(self, key: str, **params: object) -> str:
         text = self._messages.get(key) or self._fallback.get(key) or key
         for name, value in params.items():

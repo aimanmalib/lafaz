@@ -1,0 +1,23 @@
+<div id="run" class="run{% if not run.active %} run-done{% endif %}"{% if run.active %} hx-get="/run/{{ run.id }}/body?lang={{ lang }}" hx-trigger="every {{ poll }}s" hx-swap="outerHTML"{% endif %}>
+  <div class="run-head">
+    <h1>{{ t('run.heading') }}</h1>
+    <p class="run-meta">
+      <span>{{ t('run.meeting_on', date=run.meeting_date) }}</span>
+      <span>{{ t('source.' ~ run.source) }}</span>
+      <span>{{ t('mode.' ~ run.mode) }}</span>
+    </p>
+    <a class="btn btn-quiet" href="/?lang={{ lang }}">{{ t('run.new') }}</a>
+  </div>
+  {% if notice %}<p class="notice" role="alert">{{ notice }}</p>{% endif %}
+  {% if run.active %}
+  <p class="working" role="status">{{ t('run.working') }}</p>
+  {% elif run.handoff and run.status == 'stopped' %}
+  {% include "partials/run/stopped.html" %}
+  {% endif %}
+  <div class="cols">
+    {% include "partials/run/heard.html" %}
+    {% include "partials/run/understood.html" %}
+    {% include "partials/run/plan.html" %}
+  </div>
+  {% include "partials/run/trace.html" %}
+</div>

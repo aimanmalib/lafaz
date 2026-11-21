@@ -106,7 +106,7 @@ Short records of choices made while building Lafaz. Newest last. Each one says w
 ## D9. Memory and conflicts: code picks candidates, the model judges, a person decides (21 Nov, 17:30 MYT)
 
 - What: `lafaz/memory/` adds people, decisions, conflicts and reminder policies (new tables in `lafaz/schema.sql`,
-  `outbox.policy_id` and `outbox.label` by ADD COLUMN; nothing is dropped).
+  `outbox.policy_id` and `outbox.label` by `ADD COLUMN`; nothing is dropped).
   - Each accepted decision item becomes an active decision. Earlier active decisions from other runs become
     candidates only when they share at least `conflict.min_shared_terms` terms after normalising and removing the
     stopwords in `config/memory.json`. The model is never asked about a pair code did not pick.
@@ -125,3 +125,24 @@ Short records of choices made while building Lafaz. Newest last. Each one says w
 - Measured: one live `judge_conflict` call on two synthetic meetings reported the conflict with both quotes accepted
   by code, in about 19 s, USD 0.004 by `config/prices.json`.
 - Undo: the memory step is two lines in `lafaz/agent/loop.py`; removing them leaves the loop as in D8.
+
+## D10. Run page: a worker thread, HTMX polling, and marks mapped back to the spoken words (21 Nov, 17:55 MYT)
+
+- What: `POST /run` stores the meeting, starts `lafaz.agent.loop.run` in a worker thread (`lafaz/runner.py`) and
+  redirects to `/run/<id>`. While the run is `started` the page body polls `/run/<id>/body` every
+  `run_page.poll_seconds`. Buttons (Approve, Edit then approve, Skip, Undo, conflict choices) post forms to
+  `lafaz/routes_run.py`; with HTMX the body is swapped, without JavaScript the browser is redirected back (303).
+- Why a thread and not one long request: a run may take up to `run_limits.max_seconds` (90 s), close to the
+  proxy and CDN limits, and a person should see progress. A thread inside the app keeps the "no outside daemon"
+  rule; a run left `started` by a restart is closed at start-up with the reason `interrupted`.
+- Live runs need the model key named by `llm.key_env` in the environment. Without it `POST /run` stores nothing and
+  says live planning is off (PRD 4.10: the public URL is replay mode until the owner's key arrives). Budget and
+  per-IP limits come in C5.
+- Marks: the quote checker matches normalised text. `lafaz/view/marks.py` rebuilds that normalisation one source
+  character at a time with an index map, so a mark covers the words exactly as typed (curly apostrophes, case,
+  spacing), and a quote that is not in the text is never painted.
+- Edit before approving offers the top-level string and integer fields of the tool's schema; the gate checks the
+  edited arguments again. A failed check keeps the card pending only for schema errors (D8).
+- Measured: one live run of the synthetic sample: 4 items, 2 tasks created, 4 cards waiting, stopped with
+  `missing_facts` because one question stayed open; 67 s, USD 0.032.
+- Undo: remove `app.include_router(run_router)`; the run routes disappear and the dictation page still works.

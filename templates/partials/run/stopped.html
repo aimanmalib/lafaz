@@ -1,0 +1,7 @@
+{% set h = run.handoff %}
+<section class="stopped" aria-labelledby="stopped-h">
+  <h2 id="stopped-h">{{ t('handoff.heading') }}</h2>
+  {% set rkey = 'handoff.reason.' ~ h.reason.split(':')[0] %}
+  <p>{{ t(rkey) if t.has(rkey) else t('handoff.reason.other', code=h.reason) }}</p>
+  <p class="muted">{{ t('handoff.counts', done=h.done|length, waiting=h.not_done|length, questions=h.questions|length) }}</p>
+</section>

@@ -1,0 +1,34 @@
+<section class="col understood" aria-labelledby="understood-h">
+  <h2 id="understood-h">{{ t('run.understood') }}</h2>
+  {% if items %}
+  <ol class="items">
+    {% for item in items %}
+    <li class="item" id="item-{{ loop.index }}">
+      <p class="item-head"><span class="num">{{ loop.index }}</span><span class="kind mk-{{ item.kind }}">{{ t('kind.' ~ item.kind) }}</span></p>
+      <p class="item-text">{{ item.text }}</p>
+      {% if item.owner or item.due_date %}
+      <p class="chips">
+        {% if item.owner %}<span class="chip">{{ t('item.owner', name=item.owner) }}</span>{% endif %}
+        {% if item.due_date %}<span class="chip">{{ t('item.due', date=item.due_date) }}</span>{% endif %}
+      </p>
+      {% endif %}
+      {% for quote in item.quotes %}<blockquote class="quote">{{ quote }}</blockquote>{% endfor %}
+    </li>
+    {% endfor %}
+  </ol>
+  {% elif not run.active %}
+  <p class="empty">{{ t('run.no_items') }}</p>
+  {% endif %}
+  {% if questions %}
+  <h3>{{ t('run.questions') }}</h3>
+  <ul class="questions">
+    {% for q in questions %}
+    <li>
+      <p>{% if q.origin == 'code' %}{{ t('question.' ~ q.code, **q.params) }}{% else %}{{ q.text }}{% endif %}{% if q.item_number %} <span class="muted">{{ t('run.about_item', n=q.item_number) }}</span>{% endif %}</p>
+      {% if q.quote and q.origin == 'model' %}<blockquote class="quote">{{ q.quote }}</blockquote>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% if rejected %}<p class="muted set-aside">{{ t('run.set_aside', n=rejected|length) }}</p>{% endif %}
+</section>

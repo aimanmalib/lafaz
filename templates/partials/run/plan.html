@@ -1,0 +1,22 @@
+{% set base = '/run/' ~ run.id %}
+<section class="col plan" aria-labelledby="plan-h">
+  <h2 id="plan-h">{{ t('run.plan') }}</h2>
+  {% for card in cards %}{% include "partials/run/conflict.html" %}{% endfor %}
+  {% for a in approvals %}{% include "partials/run/approval.html" %}{% endfor %}
+  {% if done_steps %}
+  <h3>{{ t('plan.done_heading') }}</h3>
+  <ul class="done">
+    {% for step in done_steps %}
+    <li class="done-step">
+      <p><span class="tool">{{ t('tool.' ~ step.tool) }}</span>{% if step.arguments.title %}: {{ step.arguments.title }}{% elif step.arguments.person %}: {{ step.arguments.person }}{% endif %}</p>
+      {% if step.can_undo %}
+      <form method="post" action="{{ base }}/steps/{{ step.seq }}/undo" hx-post="{{ base }}/steps/{{ step.seq }}/undo?lang={{ lang }}" hx-target="#run" hx-swap="outerHTML">
+        <button type="submit" class="btn btn-quiet">{{ t('plan.undo') }}</button>
+      </form>
+      {% else %}<p class="muted">{{ t('plan.undone') }}</p>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% if not cards and not approvals and not done_steps and not run.active %}<p class="empty">{{ t('plan.nothing') }}</p>{% endif %}
+</section>

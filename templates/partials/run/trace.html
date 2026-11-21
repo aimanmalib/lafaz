@@ -1,0 +1,19 @@
+<details class="trace">
+  <summary>{{ t('trace.heading') }} <span class="muted">{{ t('trace.totals', steps=steps|length, seconds='%.1f'|format(totals.ms / 1000), cost='%.4f'|format(totals.cost_usd)) }}</span></summary>
+  <div class="trace-scroll">
+    <table>
+      <thead><tr><th scope="col">{{ t('trace.seq') }}</th><th scope="col">{{ t('trace.tool') }}</th><th scope="col">{{ t('trace.category') }}</th><th scope="col">{{ t('trace.status') }}</th><th scope="col">{{ t('trace.ms') }}</th><th scope="col">{{ t('trace.tokens') }}</th><th scope="col">{{ t('trace.cost') }}</th></tr></thead>
+      <tbody>
+        {% for s in steps %}
+        <tr><td>{{ s.seq }}</td><td>{{ s.tool }}</td><td>{{ s.category }}</td><td>{{ s.status }}</td><td>{{ s.ms or 0 }}</td><td>{{ (s.tokens_in or 0) + (s.tokens_out or 0) }}</td><td>{{ '%.4f'|format(s.cost_usd or 0) }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if rejected %}
+  <h3>{{ t('trace.set_aside') }}</h3>
+  <ul class="set-aside-list">
+    {% for r in rejected %}<li>{{ r.text or '' }} <span class="muted">{{ t('reject.' ~ r.reason) if t.has('reject.' ~ r.reason) else r.reason }}</span></li>{% endfor %}
+  </ul>
+  {% endif %}
+</details>

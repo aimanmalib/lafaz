@@ -20,6 +20,10 @@
   --focus: #2B5BD7;
   --on-ink: #FBFCFE;
   --on-mark: #17233F;
+  --mk-decision: var(--mark-decision);
+  --mk-action: var(--mark-action);
+  --mk-question: var(--mark-question);
+  --mk-fact: var(--mark-fact);
   --wordmark-mark: var(--mark-action);
   --sheet-shadow: 0 1px 0 var(--rule), 0 12px 32px -16px rgb(23 35 63 / 0.35);
 
@@ -30,11 +34,17 @@
   --r-paper: 2px; --r-btn: 6px; --r-pill: 999px;
   --measure: 62ch;
   --page: 46rem;
+  --page-wide: 92rem;
   --tap: 44px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
+    /* Marker hues at 45 % alpha, an underlay on the dark sheet. */
+    --mk-decision: rgb(255 213 74 / 0.45);
+    --mk-action: rgb(127 224 201 / 0.45);
+    --mk-question: rgb(247 168 207 / 0.45);
+    --mk-fact: rgb(198 195 255 / 0.45);
     --ink: #E6ECF7;
     --sheet: #18213A;
     --desk: #10172A;
@@ -43,7 +53,7 @@
     --seal: #FF8A7A;
     --focus: #8FB0FF;
     --on-ink: #10172A;
-    --wordmark-mark: color-mix(in srgb, var(--mark-action) 45%, transparent);
+    --wordmark-mark: var(--mk-action);
     --sheet-shadow: 0 1px 0 var(--rule), 0 12px 32px -16px rgb(0 0 0 / 0.6);
   }
 }
@@ -111,6 +121,7 @@ body {
 }
 .langs a[aria-current="true"] { background: var(--ink); color: var(--on-ink); }
 
+.wide .top, .wide main, .wide .foot { max-width: var(--page-wide); }
 main { flex: 1; width: 100%; max-width: var(--page); margin: 0 auto; padding: 0 var(--sp-4) var(--sp-7); }
 
 /* The transcript sheet. */

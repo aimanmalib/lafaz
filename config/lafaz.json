@@ -3,7 +3,10 @@
     "name": "Lafaz",
     "public_url": "https://lafaz.sasateguh.com",
     "default_lang": "en",
-    "languages": ["en", "ms"],
+    "languages": [
+      "en",
+      "ms"
+    ],
     "lang_cookie": "lafaz_lang",
     "lang_cookie_days": 365,
     "timezone": "Asia/Kuala_Lumpur",
@@ -22,7 +25,8 @@
     "effort": "medium",
     "max_tokens": 16000,
     "fallbacks": "default",
-    "timeout_s": 60
+    "timeout_s": 60,
+    "key_env": "ANTHROPIC_API_KEY"
   },
   "run_limits": {
     "max_steps": 12,
@@ -53,5 +57,8 @@
     ],
     "reminder_max_days_before": 14,
     "result_max_chars": 2000
+  },
+  "run_page": {
+    "poll_seconds": 2
   }
 }
