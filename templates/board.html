@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}{{ t('board.page_title') }} | {{ t('site.title') }}{% endblock %}
+{% block bodyclass %}page wide{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ asset('css/board.css') }}">{% endblock %}
+{% block main %}
+<article class="board">
+  <header class="board-head">
+    <h1>{{ t('board.heading') }}</h1>
+    <p class="board-intro">{{ t('board.intro') }}</p>
+    <p class="board-space">{{ t('board.space_' ~ space) }}</p>
+    {% if waiting %}<p class="notice" role="status">{{ t('board.waiting', n=waiting) }}</p>{% endif %}
+  </header>
+  <div class="lanes">
+    {% for status, cards in columns.items() %}
+    <section class="lane lane-{{ status }}" aria-labelledby="lane-{{ status }}">
+      <h2 id="lane-{{ status }}">{{ t('board.col.' ~ status) }} <span class="lane-count">{{ cards | length }}</span></h2>
+      {% if not cards %}<p class="lane-empty">{{ t('board.col_empty') }}</p>{% endif %}
+      <ol class="cards">
+        {% for c in cards %}
+        <li class="card" id="task-{{ c.id }}">
+          <p class="card-title">{{ c.title }}</p>
+          <p class="card-facts">
+            <span>{{ c.owner or t('board.no_owner') }}</span>
+            <span>{{ t('board.due', date=c.due_date) if c.due_date else t('board.no_due') }}</span>
+          </p>
+          {% if c.quote %}<blockquote class="card-quote">{{ c.quote }}</blockquote>{% endif %}
+          <div class="card-moves">
+            <a class="card-run" href="/run/{{ c.run_id }}">{{ t('board.from_run', n=c.run_id) }}</a>
+            {% for target in columns.keys() if target != status %}
+            <form method="post" action="/board/task/{{ c.id }}/{{ target }}?lang={{ lang }}">
+              <button type="submit" class="btn btn-quiet btn-small">{{ t('board.move_to', col=t('board.col.' ~ target)) }}</button>
+            </form>
+            {% endfor %}
+          </div>
+        </li>
+        {% endfor %}
+      </ol>
+    </section>
+    {% endfor %}
+  </div>
+
+  <section class="board-out" aria-labelledby="out-h">
+    <h2 id="out-h">{{ t('board.out_heading') }}</h2>
+    <ul class="out-links">
+      <li><a href="/board.csv">{{ t('board.export_csv') }}</a></li>
+      <li><a href="/board.json">{{ t('board.export_json') }}</a></li>
+      {% if ics_token %}<li><a href="/ics/{{ ics_token }}.ics">{{ t('board.ics') }}</a> <span class="out-note">{{ t('board.ics_note') }}</span></li>{% endif %}
+    </ul>
+    <p class="out-note">{{ t('board.no_trackers') }}</p>
+  </section>
+
+  <section class="weekly" aria-labelledby="weekly-h">
+    <h2 id="weekly-h">{{ t('board.weekly_heading') }}</h2>
+    <p class="out-note">{{ t('board.weekly_note', days=window_days) }}</p>
+    {% if not people %}<p class="lane-empty">{{ t('board.weekly_empty') }}</p>{% endif %}
+    <div class="weekly-people">
+      {% for p in people %}
+      <section class="person">
+        <h3>{{ p.person }}</h3>
+        <p class="person-line">{{ t('board.weekly_counts', open=p.open | length, done=p.done | length, overdue=p.overdue) }}</p>
+        <ul>
+          {% for task in p.open %}<li>{{ task.title }}{% if task.due_date %} <span class="out-note">{{ t('board.due', date=task.due_date) }}</span>{% endif %}</li>{% endfor %}
+          {% for task in p.done %}<li class="done">{{ task.title }}</li>{% endfor %}
+        </ul>
+      </section>
+      {% endfor %}
+    </div>
+  </section>
+</article>
+{% endblock %}

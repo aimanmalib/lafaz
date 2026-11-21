@@ -1,0 +1,38 @@
+/* The /board page: three lanes on paper, cards that quote the words they came from. Lanes stack on phones. */
+.board { background: var(--sheet); border-radius: var(--r-paper); box-shadow: var(--sheet-shadow); padding: var(--sp-6) var(--sp-5); }
+.board h1 { font: 600 var(--s-4)/1.2 var(--serif); margin: 0 0 var(--sp-3); }
+.board h2 { font: 600 var(--s-2)/1.3 var(--serif); margin: 0 0 var(--sp-3); }
+.board-intro, .board-space { max-width: var(--measure); margin: 0 0 var(--sp-2); }
+.board-space { color: var(--muted); font-size: var(--s-0); }
+
+.lanes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: var(--sp-5); margin: var(--sp-5) 0 var(--sp-6); }
+.lane { min-width: 0; border-top: 3px solid var(--mark-question); padding-top: var(--sp-3); }
+.lane-doing { border-top-color: var(--mark-decision); }
+.lane-done { border-top-color: var(--mark-action); }
+.lane-count { font: 700 var(--s-0)/1 var(--sans); color: var(--muted); font-variant-numeric: tabular-nums; }
+.lane-empty { color: var(--muted); font-size: var(--s-0); margin: 0; }
+.cards { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-3); }
+.card { min-width: 0; border: 1px solid var(--rule); border-radius: var(--r-btn); padding: var(--sp-3); background: var(--sheet); }
+.card-title { font-weight: 700; margin: 0 0 var(--sp-1); overflow-wrap: anywhere; }
+.card-facts { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-3); margin: 0; font-size: var(--s-0); color: var(--muted); font-variant-numeric: tabular-nums; }
+.card-quote { margin: var(--sp-2) 0 0; padding-left: var(--sp-3); border-left: 3px solid var(--mark-action); font: italic var(--s-0)/1.5 var(--serif); overflow-wrap: anywhere; }
+.card-moves { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2); margin-top: var(--sp-3); }
+.card-moves form { margin: 0; }
+.card-run { font-size: var(--s-0); margin-right: auto; }
+.btn-small { min-height: var(--tap); padding: 0 var(--sp-3); font-size: var(--s-0); }
+
+.board-out, .weekly { border-top: 1px solid var(--rule); padding-top: var(--sp-5); margin-top: var(--sp-5); }
+.out-links { margin: 0 0 var(--sp-2); padding-left: var(--sp-5); }
+.out-links li { padding: var(--sp-1) 0; }
+.out-note { color: var(--muted); font-size: var(--s-0); max-width: var(--measure); margin: 0 0 var(--sp-3); }
+.weekly-people { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: var(--sp-4); }
+.person { min-width: 0; }
+.person h3 { font: 600 var(--s-1)/1.3 var(--serif); margin: 0 0 var(--sp-1); }
+.person-line { font-size: var(--s-0); color: var(--muted); margin: 0 0 var(--sp-2); font-variant-numeric: tabular-nums; }
+.person ul { margin: 0; padding-left: var(--sp-5); }
+.person li { overflow-wrap: anywhere; }
+.person li.done { text-decoration: line-through; color: var(--muted); }
+
+@media (max-width: 30rem) {
+  .board { padding: var(--sp-4) var(--sp-3); }
+}

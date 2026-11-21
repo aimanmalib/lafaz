@@ -18,12 +18,12 @@ from . import config
 router = APIRouter()
 
 
-def _token() -> str:
+def secret() -> str:
     return os.environ.get(config.mail()["env"]["owner_token"], "")
 
 
 def _matches(value: str | None) -> bool:
-    token = _token()
+    token = secret()
     return bool(token and value) and hmac.compare_digest(value.encode("utf-8"), token.encode("utf-8"))
 
 

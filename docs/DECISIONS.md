@@ -203,3 +203,17 @@ Short records of choices made while building Lafaz. Newest last. Each one says w
   with `interrupted` rather than sending it twice.
 - Each delivery outcome is a trace step with status `mail_*`, so it never counts as an action that ran.
 - Undo: unset `LAFAZ_MAIL_ENV_FILE` in the host file and deploy; owner runs then show `held` and nothing is sent.
+
+## D14. Board, calendar feed and weekly summary (21 Nov, 22:40 MYT)
+
+- **Board shows published tasks only.** Publishing is the irreversible `publish_to_board` tool, so a card reaches the team
+  board only after a person approves it. Moving a card between To do / Doing / Done is the person's own click and can be
+  moved back, so it needs no approval. Every query is limited to the visitor's space (public or owner).
+- **Calendar feed written by hand** (`lafaz/board/ics.py`, RFC 5545: CRLF, 75-octet folding on character boundaries,
+  text escaping). All-day event per open task with a due date; each active reminder policy becomes a `VALARM` with the
+  approved number of days. Tests read the feed back with the `icalendar` parser (dev dependency only). Public feed token
+  is fixed in `config/board.json`; the owner token is an HMAC of the owner secret, so it vanishes when the secret is unset.
+- **Weekly summary preview is code only**, built from the database (open, done, overdue per person). The LLM-phrased
+  summary and its sending stay where they already are: `preview_summary` and the irreversible `send_summary` inside a
+  run. The board itself never sends anything. Undo: remove `routes_board` from `lafaz/app.py`.
+- **Exports:** CSV and JSON with the fields listed in `config/board.json`. Jira and Linear connectors are not built.

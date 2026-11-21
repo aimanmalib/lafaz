@@ -1,0 +1,21 @@
+{
+  "_note": "The team board, its exports, the calendar feed and the weekly summary (PRD 4.6, 4.7). Only tasks a person approved for publishing appear on the board; the calendar feed carries every open task with a due date in the space.",
+  "columns": ["todo", "doing", "done"],
+  "export": {
+    "fields": ["id", "title", "owner", "due_date", "status", "quote", "run_id", "created_at"],
+    "filename": "lafaz-board"
+  },
+  "ics": {
+    "public_token": "public",
+    "owner_token_label": "lafaz-ics-v1",
+    "owner_token_chars": 24,
+    "prodid": "-//Lafaz//Board feed//EN",
+    "calendar_name": "Lafaz tasks",
+    "uid_domain": "lafaz.sasateguh.com",
+    "include_done": false
+  },
+  "summary": {
+    "window_days": 7,
+    "max_people": 12
+  }
+}
