@@ -1,0 +1,9 @@
+<div class="sheet" id="sheet">
+  <label class="sheet-label" for="text">{{ t('dictate.label') }}</label>
+  {% if sample %}<p class="sample-label">{{ t('sample.label') }}</p>{% endif %}
+  <textarea id="text" name="text" rows="9" maxlength="{{ max_chars }}" placeholder="{{ t('dictate.placeholder') }}" data-count-template="{{ t('dictate.count') }}" aria-describedby="count">{{ text }}</textarea>
+  <div class="sheet-meta">
+    <label class="date">{{ t('dictate.date') }} <input type="date" name="meeting_date" value="{{ meeting_date }}"></label>
+    <span id="count" class="count" aria-live="polite">{{ t('dictate.count', n=text|length, max=max_chars) }}</span>
+  </div>
+</div>

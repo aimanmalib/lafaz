@@ -1,0 +1,34 @@
+"""Interface text lookup. All copy lives in config/i18n/<lang>.json with identical keys."""
+
+from __future__ import annotations
+
+from . import config
+
+
+def languages() -> list[str]:
+    return list(config.settings()["app"]["languages"])
+
+
+def default_lang() -> str:
+    return config.settings()["app"]["default_lang"]
+
+
+def pick(requested: str | None, cookie: str | None) -> str:
+    """Query parameter wins, then the cookie, then the configured default."""
+    for candidate in (requested, cookie):
+        if candidate in languages():
+            return candidate
+    return default_lang()
+
+
+class Translator:
+    def __init__(self, lang: str):
+        self.lang = lang
+        self._messages = config.messages(lang)
+        self._fallback = config.messages(default_lang())
+
+    def __call__(self, key: str, **params: object) -> str:
+        text = self._messages.get(key) or self._fallback.get(key) or key
+        for name, value in params.items():
+            text = text.replace("{" + name + "}", str(value))
+        return text

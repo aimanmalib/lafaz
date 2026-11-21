@@ -1,0 +1,46 @@
+{
+  "app": {
+    "name": "Lafaz",
+    "public_url": "https://lafaz.sasateguh.com",
+    "default_lang": "en",
+    "languages": ["en", "ms"],
+    "lang_cookie": "lafaz_lang",
+    "lang_cookie_days": 365,
+    "timezone": "Asia/Kuala_Lumpur",
+    "db_path_default": "state/lafaz.db",
+    "noindex": true
+  },
+  "rung": {
+    "current": 3,
+    "levels": {
+      "2": "rung.2",
+      "3": "rung.3"
+    }
+  },
+  "llm": {
+    "model": "claude-sonnet-5-5",
+    "effort": "medium",
+    "max_tokens": 16000,
+    "fallbacks": "default",
+    "timeout_s": 60
+  },
+  "run_limits": {
+    "max_steps": 12,
+    "max_seconds": 90,
+    "max_cost_usd": 0.15
+  },
+  "listen": {
+    "min_quote_words": 3
+  },
+  "public_budget": {
+    "usd_per_day": 5,
+    "runs_per_ip_per_day": 20,
+    "trusted_proxy_header": "cf-connecting-ip"
+  },
+  "scheduler": {
+    "reminder_check_seconds": 300
+  },
+  "input": {
+    "max_chars": 12000
+  }
+}

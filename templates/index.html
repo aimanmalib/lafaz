@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block main %}
+<form class="dictate" method="post" action="/run?lang={{ lang }}">
+  <h1 class="sr">{{ t('dictate.heading') }}</h1>
+  {% if notice %}<p class="notice" role="status">{{ notice }}</p>{% endif %}
+  {% include "partials/sheet.html" %}
+  <div class="actions">
+    <button type="button" class="btn btn-quiet" hx-get="/sample?lang={{ lang }}" hx-target="#sheet" hx-swap="outerHTML">{{ t('dictate.sample') }}</button>
+    <button type="submit" class="btn btn-main">{{ t('dictate.submit') }}</button>
+  </div>
+  <p class="promise">{{ t('dictate.promise') }}</p>
+</form>
+{% endblock %}
