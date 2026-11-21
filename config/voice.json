@@ -1,0 +1,5 @@
+{
+  "_note": "The /voice page (PRD 5.1). 'notes' lists each note the owner dictated with Wispr Flow to the builder during the event: the word after the title prefix, when it arrived (UTC, ISO 8601) and its word count. Never the note body or any value it held. The builder adds a row when it reads a note.",
+  "title_prefix": "nextgen",
+  "notes": []
+}

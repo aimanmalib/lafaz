@@ -1,0 +1,59 @@
+/* /memory, /voice and /about: one paper sheet, a serif heading, timelines whose rows quote the words they came from. */
+.paper { background: var(--sheet); border-radius: var(--r-paper); box-shadow: var(--sheet-shadow); padding: var(--sp-6) var(--sp-5); }
+.paper h1 { font: 600 var(--s-4)/1.2 var(--serif); margin: 0 0 var(--sp-3); }
+.paper h2 { font: 600 var(--s-2)/1.3 var(--serif); margin: var(--sp-6) 0 var(--sp-3); }
+.paper h3 { font: 600 var(--s-1)/1.3 var(--serif); margin: 0 0 var(--sp-1); }
+.paper section { min-width: 0; }
+.intro, .prose, .note { max-width: var(--measure); margin: 0 0 var(--sp-3); }
+.note, .meta, .empty { color: var(--muted); font-size: var(--s-0); }
+.meta { margin: 0; font-variant-numeric: tabular-nums; }
+.empty { margin: 0; }
+.count { font: 700 var(--s-0)/1 var(--sans); color: var(--muted); font-variant-numeric: tabular-nums; }
+.links { display: flex; flex-wrap: wrap; gap: 0 var(--sp-4); margin: 0; }
+.links a { display: inline-flex; align-items: center; min-height: var(--tap); }
+
+.timeline { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+.entry { min-width: 0; padding: var(--sp-3) 0 var(--sp-3) var(--sp-4); border-bottom: 1px solid var(--rule); border-left: 3px solid var(--mark-decision); }
+.entry-superseded { border-left-color: var(--rule); }
+.entry-superseded .entry-title { text-decoration: line-through; color: var(--muted); }
+.entry-facts { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-1) var(--sp-3); margin: 0 0 var(--sp-1); font-size: var(--s-0); color: var(--muted); font-variant-numeric: tabular-nums; }
+.entry-title { font-weight: 700; margin: 0; overflow-wrap: anywhere; }
+.entry-note { margin: var(--sp-2) 0 0; font-size: var(--s-0); overflow-wrap: anywhere; }
+.quote { margin: var(--sp-2) 0 0; padding-left: var(--sp-3); border-left: 3px solid var(--mark-action); font: italic var(--s-0)/1.5 var(--serif); overflow-wrap: anywhere; }
+.tag { display: inline-block; padding: 0 var(--sp-2); border-radius: var(--r-pill); font-weight: 700; color: var(--ink); background: var(--mk-action); }
+.tag-superseded, .tag-not_judged, .tag-rejected { background: transparent; border: 1px solid var(--rule); }
+.tag-conflict { background: var(--mk-question); }
+.tag-no_conflict { background: var(--mk-fact); }
+
+.pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: var(--sp-3) var(--sp-5); margin: var(--sp-2) 0 0; }
+.pair > div { min-width: 0; }
+.pair dt { font-size: var(--s-0); color: var(--muted); font-variant-numeric: tabular-nums; }
+.pair dd { margin: 0; overflow-wrap: anywhere; }
+
+.people { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: var(--sp-3) var(--sp-5); }
+.people li { min-width: 0; display: flex; flex-direction: column; overflow-wrap: anywhere; }
+.person-name { font-weight: 700; }
+
+.steps-list { max-width: var(--measure); margin: 0 0 var(--sp-4); padding-left: var(--sp-5); }
+.steps-list li { padding: var(--sp-1) 0; }
+
+.layers { list-style: none; margin: 0 0 var(--sp-3); padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); gap: var(--sp-4); counter-reset: layer; }
+.layer { min-width: 0; border-top: 3px solid var(--mark-action); padding-top: var(--sp-3); counter-increment: layer; }
+.layer h3::before { content: counter(layer) ". "; color: var(--muted); }
+.layer p { margin: 0; font-size: var(--s-0); }
+.layer-hear { border-top-color: var(--mark-decision); }
+.layer-remember { border-top-color: var(--mark-fact); }
+.layer-approve { border-top-color: var(--seal); }
+
+.cats { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); gap: var(--sp-4); margin: 0 0 var(--sp-3); }
+.cat { min-width: 0; border: 1px solid var(--rule); border-radius: var(--r-btn); padding: var(--sp-3); }
+.cat-irreversible { border-left: 4px solid var(--seal); }
+.cat dt { font-weight: 700; }
+.cat dd { margin: 0; font-size: var(--s-0); }
+.cat dd.cat-rule { color: var(--muted); margin-bottom: var(--sp-2); }
+.cat ul { margin: 0; padding-left: var(--sp-5); }
+
+@media (max-width: 30rem) {
+  .paper { padding: var(--sp-5) var(--sp-3); }
+  .paper h1 { font-size: var(--s-3); }
+}

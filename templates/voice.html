@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}{{ t('voice.page_title') }} | {{ t('site.title') }}{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ asset('css/pages.css') }}">{% endblock %}
+{% block main %}
+<article class="paper">
+  <header>
+    <h1>{{ t('voice.heading') }}</h1>
+    <p class="intro">{{ t('voice.intro') }}</p>
+  </header>
+  <section aria-labelledby="in-h">
+    <h2 id="in-h">{{ t('voice.input_heading') }}</h2>
+    <ol class="steps-list">
+      <li>{{ t('voice.input.1') }}</li>
+      <li>{{ t('voice.input.2') }}</li>
+      <li>{{ t('voice.input.3') }}</li>
+    </ol>
+    <p><a class="btn btn-quiet" href="/">{{ t('voice.try') }}</a></p>
+  </section>
+  <section aria-labelledby="tl-h">
+    <h2 id="tl-h">{{ t('voice.timeline') }}</h2>
+    <p class="note">{{ t('voice.timeline_note') }}</p>
+    {% if not notes %}
+    <p class="empty">{{ t('voice.empty') }}</p>
+    {% else %}
+    <p class="meta">{{ t('voice.totals', n=notes | length, words=total_words) }}</p>
+    <ol class="timeline">
+      {% for n in notes %}
+      <li class="entry">
+        <p class="entry-facts"><time>{{ n.at }}</time><span>{{ t('voice.words', n=n.words) }}</span></p>
+        <p class="entry-title"><code>{{ n.title }}</code></p>
+      </li>
+      {% endfor %}
+    </ol>
+    {% endif %}
+  </section>
+</article>
+{% endblock %}

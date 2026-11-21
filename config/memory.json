@@ -20,6 +20,10 @@
       "setuju", "putuskan", "keputusan", "pindah", "tukar", "sebelum", "selepas", "hingga", "sampai"
     ]
   },
+  "page": {
+    "max_decisions": 100,
+    "max_conflicts": 50
+  },
   "reminders": {
     "max_sends_per_policy": 1
   }

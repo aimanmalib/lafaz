@@ -37,3 +37,16 @@ def remember_run(conn: sqlite3.Connection, run_id: int) -> int:
     for row in names:
         conn.execute("INSERT OR IGNORE INTO people (name) VALUES (?)", (row["name"],))
     return conn.execute("SELECT COUNT(*) FROM people").fetchone()[0] - before
+
+
+def in_space(conn: sqlite3.Connection, space: str) -> list[dict]:
+    """People named as owner or speaker of an accepted item in a run started in `space`, with how many items."""
+    rows = conn.execute(
+        "SELECT p.name, p.aliases_json, p.email, COUNT(*) AS items FROM people p"
+        " JOIN items i ON i.status = 'accepted' AND (i.owner = p.name OR i.speaker = p.name)"
+        " JOIN runs r ON r.id = i.run_id WHERE COALESCE(r.space, 'public') = ?"
+        " GROUP BY p.id ORDER BY p.name",
+        (space,),
+    )
+    return [{"name": r["name"], "aliases": json.loads(r["aliases_json"]), "email": r["email"], "items": r["items"]}
+            for r in rows]

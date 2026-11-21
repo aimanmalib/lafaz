@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}{{ t('memory.page_title') }} | {{ t('site.title') }}{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ asset('css/pages.css') }}">{% endblock %}
+{% block main %}
+<article class="paper">
+  <header>
+    <h1>{{ t('memory.heading') }}</h1>
+    <p class="intro">{{ t('memory.intro') }}</p>
+    <p class="meta">{{ t('memory.space_' ~ space) }}</p>
+  </header>
+  <section aria-labelledby="dec-h">
+    <h2 id="dec-h">{{ t('memory.decisions') }} <span class="count">{{ decisions | length }}</span></h2>
+    {% if not decisions %}<p class="empty">{{ t('memory.decisions_empty') }}</p>{% endif %}
+    <ol class="timeline">
+      {% for d in decisions %}
+      <li class="entry entry-{{ d.status }}" id="decision-{{ d.id }}">
+        <p class="entry-facts">
+          <time datetime="{{ d.meeting_date }}">{{ d.meeting_date }}</time>
+          <span class="tag tag-{{ d.status }}">{{ t('memory.status.' ~ d.status) }}</span>
+          <a href="/run/{{ d.run_id }}">{{ t('board.from_run', n=d.run_id) }}</a>
+        </p>
+        <p class="entry-title">{{ d.statement }}</p>
+        <blockquote class="quote">{{ d.quote }}</blockquote>
+        {% if d.replaced_by %}<p class="entry-note">{{ t('memory.replaced_by', statement=d.replaced_by) }}</p>{% endif %}
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+  <section aria-labelledby="con-h">
+    <h2 id="con-h">{{ t('memory.conflicts') }} <span class="count">{{ conflicts | length }}</span></h2>
+    <p class="note">{{ t('memory.conflicts_note') }}</p>
+    {% if not conflicts %}<p class="empty">{{ t('memory.conflicts_empty') }}</p>{% endif %}
+    <ol class="timeline">
+      {% for c in conflicts %}
+      <li class="entry" id="conflict-{{ c.id }}">
+        <p class="entry-facts">
+          <span class="tag tag-{{ c.verdict }}">{{ t('memory.verdict.' ~ c.verdict) }}</span>
+          {% if c.verdict == 'conflict' %}<span>{{ t('conflict.status.' ~ c.status) }}</span>{% endif %}
+          <a href="/run/{{ c.run_id }}">{{ t('board.from_run', n=c.run_id) }}</a>
+        </p>
+        <dl class="pair">
+          <div><dt>{{ t('memory.earlier', date=c.old_date) }}</dt><dd>{{ c.old_statement }}</dd>
+            {% if c.old_quote %}<dd><blockquote class="quote">{{ c.old_quote }}</blockquote></dd>{% endif %}</div>
+          <div><dt>{{ t('memory.later', date=c.new_date) }}</dt><dd>{{ c.new_statement }}</dd>
+            {% if c.new_quote %}<dd><blockquote class="quote">{{ c.new_quote }}</blockquote></dd>{% endif %}</div>
+        </dl>
+        {% if c.verdict == 'rejected' %}<p class="entry-note">{{ t('memory.rejected_note') }}</p>{% endif %}
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+  <section aria-labelledby="ppl-h">
+    <h2 id="ppl-h">{{ t('memory.people') }} <span class="count">{{ people | length }}</span></h2>
+    {% if not people %}<p class="empty">{{ t('memory.people_empty') }}</p>{% endif %}
+    <ul class="people">
+      {% for p in people %}
+      <li>
+        <span class="person-name">{{ p.name }}</span>
+        <span class="meta">{{ t('memory.person_items', n=p['items']) }}</span>
+        {% if p.aliases %}<span class="meta">{{ t('memory.aliases', names=p.aliases | join(', ')) }}</span>{% endif %}
+        {% if space == 'owner' and p.email %}<span class="meta">{{ p.email }}</span>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+</article>
+{% endblock %}

@@ -228,3 +228,15 @@ Short records of choices made while building Lafaz. Newest last. Each one says w
   cost, so it can move between runs; a fail is reported as measured, not hidden.
 - **Not done:** no `wispr-sebenar` task yet (no dictation from the owner had arrived when this was written), and the
   naive single-prompt baseline (T1) is cut under PRD 3.3. Undo: delete the new task files; `limits` is ignored when absent.
+
+## D16 Memory, voice and about pages (21 Nov, after G2)
+
+- **Added to existing route modules, no new Python module** (feature freeze after G2): `/memory` lives with the board
+  (both read the visitor's own space), `/voice` and `/about` with `/eval` (pages that read committed files).
+- **`/memory` per space:** decisions, judged pairs and people come only from runs started in the visitor's space;
+  addresses appear only in the owner space, as on the run page. Page lengths are in `config/memory.json` `page`.
+- **`/voice` reads `config/voice.json`:** title keyword, arrival time and word count of each dictated note, never the
+  body. It is empty until a note arrives; the page says so instead of showing an example.
+- **`/about` diagram is HTML in both languages;** `docs/architecture.svg` is the English drawing for the README. The
+  contribution text keeps only what is true now: it does not yet claim dictation by Wispr Flow or owner testing; add
+  those when the notes arrive. Undo: remove the three routes and templates; nothing else reads them.

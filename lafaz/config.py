@@ -59,6 +59,11 @@ def board() -> dict:
     return _read("board.json")
 
 
+@lru_cache(maxsize=None)
+def voice() -> dict:
+    return _read("voice.json")
+
+
 def tool(name: str) -> dict:
     for entry in tools():
         if entry["name"] == name:
@@ -83,5 +88,5 @@ def db_path() -> Path:
 
 
 def clear_cache() -> None:
-    for fn in (settings, tools, samples, messages, listen, memory, prices, mail, board, prompt):
+    for fn in (settings, tools, samples, messages, listen, memory, prices, mail, board, voice, prompt):
         fn.cache_clear()

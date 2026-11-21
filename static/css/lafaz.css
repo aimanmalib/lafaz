@@ -210,6 +210,8 @@ a.btn:hover { text-decoration: none; }
 
 .foot { max-width: var(--page); width: 100%; margin: 0 auto; padding: var(--sp-5) var(--sp-4); color: var(--muted); font-size: var(--s-0); }
 .foot p { margin: 0; max-width: var(--measure); }
+.foot-nav { display: flex; flex-wrap: wrap; gap: 0 var(--sp-4); margin-top: var(--sp-2); }
+.foot-nav a { display: inline-flex; align-items: center; min-height: var(--tap); }
 
 @media (max-width: 30rem) {
   .rung { order: 3; }

@@ -75,3 +75,15 @@ def candidates(conn: sqlite3.Connection, decision_id: int) -> list[tuple[sqlite3
             scored.append((old, shared))
     scored.sort(key=lambda pair: (-len(pair[1]), -pair[0]["id"]))
     return scored[: cfg["max_candidates"]]
+
+
+def timeline(conn: sqlite3.Connection, space: str, limit: int) -> list[dict]:
+    """Decisions from runs started in `space`, newest meeting first, each with the statement that replaced it."""
+    rows = conn.execute(
+        "SELECT d.id, d.run_id, d.statement, d.quote, d.status, m.meeting_date, s.statement AS replaced_by"
+        " FROM decisions d JOIN runs r ON r.id = d.run_id JOIN meetings m ON m.id = d.meeting_id"
+        " LEFT JOIN decisions s ON s.id = d.superseded_by"
+        " WHERE COALESCE(r.space, 'public') = ? ORDER BY m.meeting_date DESC, d.id DESC LIMIT ?",
+        (space, limit),
+    )
+    return [dict(r) for r in rows]

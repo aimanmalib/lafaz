@@ -1,4 +1,4 @@
-"""The board page, its exports and the calendar feed. Every route answers for the visitor's own space only."""
+"""The board page, its exports, the calendar feed and the memory page. Every route answers for the visitor's own space only."""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ from starlette.exceptions import HTTPException
 
 from . import config, db, owner
 from .board import ics, summary, tasks
-from .memory import scheduler
+from .memory import conflicts, decisions, people, scheduler
 from .web import context, render
 
 router = APIRouter()
@@ -82,3 +82,17 @@ def calendar(token: str) -> Response:
     finally:
         conn.close()
     return Response(body, media_type="text/calendar; charset=utf-8")
+
+
+@router.get("/memory", response_class=HTMLResponse)
+def memory_page(request: Request) -> HTMLResponse:
+    space = owner.space(request)
+    limits = config.memory()["page"]
+    conn = db.connect()
+    try:
+        ctx = context(request, space=space, decisions=decisions.timeline(conn, space, limits["max_decisions"]),
+                      conflicts=conflicts.history(conn, space, limits["max_conflicts"]),
+                      people=people.in_space(conn, space))
+    finally:
+        conn.close()
+    return render("memory.html", ctx)

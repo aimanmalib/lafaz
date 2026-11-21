@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}{{ t('about.page_title') }} | {{ t('site.title') }}{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ asset('css/pages.css') }}">{% endblock %}
+{% block main %}
+<article class="paper">
+  <header>
+    <h1>{{ t('about.heading') }}</h1>
+    <p class="intro">{{ t('site.tagline') }}</p>
+  </header>
+  <section aria-labelledby="prob-h">
+    <h2 id="prob-h">{{ t('about.problem_heading') }}</h2>
+    <p class="prose">{{ t('about.problem') }}</p>
+  </section>
+  <section aria-labelledby="sol-h">
+    <h2 id="sol-h">{{ t('about.solution_heading') }}</h2>
+    <p class="prose">{{ t('about.solution') }}</p>
+  </section>
+  <section aria-labelledby="arch-h">
+    <h2 id="arch-h">{{ t('about.arch_heading') }}</h2>
+    <ol class="layers">
+      {% for n in ['hear', 'remember', 'plan', 'approve', 'act'] %}
+      <li class="layer layer-{{ n }}">
+        <h3>{{ t('about.layer.' ~ n) }}</h3>
+        <p>{{ t('about.layer.' ~ n ~ '_body') }}</p>
+      </li>
+      {% endfor %}
+    </ol>
+    <p class="meta"><a href="/about/architecture.svg">{{ t('about.svg_link') }}</a></p>
+  </section>
+  <section aria-labelledby="cat-h">
+    <h2 id="cat-h">{{ t('about.cat_heading') }}</h2>
+    <p class="note">{{ t('about.cat_note') }}</p>
+    <dl class="cats">
+      {% for cat, names in categories.items() %}
+      <div class="cat cat-{{ cat }}">
+        <dt>{{ t('eval.tool_cat.' ~ cat) }}</dt>
+        <dd class="cat-rule">{{ t('about.cat.' ~ cat) }}</dd>
+        <dd><ul>{% for name in names %}<li>{{ t.term('tool.', name) }}</li>{% endfor %}</ul></dd>
+      </div>
+      {% endfor %}
+    </dl>
+    <p class="meta">{{ t(rung_key) }}. {{ t('about.rung_note') }}</p>
+  </section>
+  <section aria-labelledby="who-h">
+    <h2 id="who-h">{{ t('about.who_heading') }}</h2>
+    <p class="prose">{{ t('about.who') }}</p>
+    <p class="links"><a href="/eval">{{ t('about.eval_link') }}</a> <a href="/voice">{{ t('about.voice_link') }}</a></p>
+  </section>
+</article>
+{% endblock %}

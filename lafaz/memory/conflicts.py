@@ -147,3 +147,18 @@ def resolve(conn: sqlite3.Connection, conflict_id: int, choice: str) -> gate.Out
 def summary(conn: sqlite3.Connection, run_id: int) -> dict[str, int]:
     rows = conn.execute("SELECT verdict, COUNT(*) FROM conflicts WHERE run_id=? GROUP BY verdict", (run_id,))
     return {verdict: n for verdict, n in rows}
+
+
+def history(conn: sqlite3.Connection, space: str, limit: int) -> list[dict]:
+    """Every judged pair from runs started in `space`, newest first: the verdict, both statements and dates,
+    the quotes the judge gave, and what a person chose."""
+    rows = conn.execute(
+        "SELECT c.id, c.run_id, c.verdict, c.status, c.reason, c.reject_reason, c.old_quote, c.new_quote,"
+        " o.statement AS old_statement, om.meeting_date AS old_date, n.statement AS new_statement,"
+        " nm.meeting_date AS new_date FROM conflicts c JOIN runs r ON r.id = c.run_id"
+        " JOIN decisions o ON o.id = c.old_decision_id JOIN meetings om ON om.id = o.meeting_id"
+        " JOIN decisions n ON n.id = c.new_decision_id JOIN meetings nm ON nm.id = n.meeting_id"
+        " WHERE COALESCE(r.space, 'public') = ? ORDER BY c.id DESC LIMIT ?",
+        (space, limit),
+    )
+    return [dict(r) for r in rows]

@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 470" width="960" height="470" role="img" aria-labelledby="t d" font-family="Georgia, 'Times New Roman', serif">
+  <title id="t">Lafaz architecture</title>
+  <desc id="d">Dictated text flows through five layers: Hear, Remember, Plan, Approve, Act. Code checks every quote and owns every permission decision; the model only proposes items, judges candidate conflicts and picks tools.</desc>
+  <rect width="960" height="470" fill="#FBFCFE"/>
+  <text x="32" y="44" font-size="24" font-weight="600" fill="#17233F">Lafaz: dictated update in, approved actions out</text>
+  <text x="32" y="70" font-size="14" fill="#55617A" font-family="system-ui, sans-serif">Top band: what the model does. Bottom band: what code does. Every arrow passes through code.</text>
+
+  <g font-family="system-ui, sans-serif" font-size="13" fill="#17233F">
+    <rect x="32" y="196" width="112" height="76" rx="6" fill="#FFFFFF" stroke="#C9D3E3"/>
+    <text x="88" y="226" text-anchor="middle" font-weight="700">Wispr Flow</text>
+    <text x="88" y="246" text-anchor="middle">dictated text</text>
+    <text x="88" y="262" text-anchor="middle">in any text box</text>
+  </g>
+
+  <g font-family="system-ui, sans-serif" font-size="12" fill="#17233F">
+    <!-- model band -->
+    <rect x="168" y="96" width="760" height="84" rx="6" fill="#EEF2FA" stroke="#C9D3E3"/>
+    <text x="180" y="114" font-weight="700" fill="#55617A">Model (Claude, tool use)</text>
+    <text x="236" y="146" text-anchor="middle">propose items</text><text x="236" y="162" text-anchor="middle">with quotes</text>
+    <text x="388" y="146" text-anchor="middle">judge candidate</text><text x="388" y="162" text-anchor="middle">pairs, quote both</text>
+    <text x="540" y="146" text-anchor="middle">choose tools</text><text x="540" y="162" text-anchor="middle">and arguments</text>
+    <text x="692" y="146" text-anchor="middle">no say in</text><text x="692" y="162" text-anchor="middle">permissions</text>
+    <text x="844" y="146" text-anchor="middle">no say in</text><text x="844" y="162" text-anchor="middle">sending</text>
+  </g>
+
+  <g font-family="system-ui, sans-serif" font-size="13" fill="#17233F">
+    <rect x="168" y="196" width="136" height="76" rx="6" fill="#FFFFFF" stroke="#C9D3E3"/><rect x="168" y="196" width="136" height="6" fill="#FFD54A"/>
+    <text x="236" y="230" text-anchor="middle" font-weight="700">1 Hear</text><text x="236" y="252" text-anchor="middle">record_items</text>
+    <rect x="320" y="196" width="136" height="76" rx="6" fill="#FFFFFF" stroke="#C9D3E3"/><rect x="320" y="196" width="136" height="6" fill="#C6C3FF"/>
+    <text x="388" y="230" text-anchor="middle" font-weight="700">2 Remember</text><text x="388" y="252" text-anchor="middle">judge_conflict</text>
+    <rect x="472" y="196" width="136" height="76" rx="6" fill="#FFFFFF" stroke="#C9D3E3"/><rect x="472" y="196" width="136" height="6" fill="#7FE0C9"/>
+    <text x="540" y="230" text-anchor="middle" font-weight="700">3 Plan</text><text x="540" y="252" text-anchor="middle">agent loop</text>
+    <rect x="624" y="196" width="136" height="76" rx="6" fill="#FFFFFF" stroke="#A3261B" stroke-width="2"/><rect x="624" y="196" width="136" height="6" fill="#A3261B"/>
+    <text x="692" y="230" text-anchor="middle" font-weight="700">4 Approve</text><text x="692" y="252" text-anchor="middle">a person decides</text>
+    <rect x="776" y="196" width="152" height="76" rx="6" fill="#FFFFFF" stroke="#C9D3E3"/><rect x="776" y="196" width="152" height="6" fill="#7FE0C9"/>
+    <text x="852" y="230" text-anchor="middle" font-weight="700">5 Act</text><text x="852" y="252" text-anchor="middle">email, board, ICS</text>
+  </g>
+  <g stroke="#17233F" stroke-width="1.5" fill="none" marker-end="url(#a)">
+    <path d="M144 234 H164"/><path d="M304 234 H316"/><path d="M456 234 H468"/><path d="M608 234 H620"/><path d="M760 234 H772"/>
+  </g>
+  <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#17233F"/></marker></defs>
+
+  <g font-family="system-ui, sans-serif" font-size="12" fill="#17233F">
+    <!-- code band -->
+    <rect x="168" y="288" width="760" height="104" rx="6" fill="#FFFFFF" stroke="#17233F"/>
+    <text x="180" y="306" font-weight="700" fill="#55617A">Code (Python, FastAPI, SQLite)</text>
+    <text x="236" y="330" text-anchor="middle">quote must be in</text><text x="236" y="346" text-anchor="middle">the text, 3+ words;</text><text x="236" y="362" text-anchor="middle">corrections, dates</text>
+    <text x="388" y="330" text-anchor="middle">pick candidates by</text><text x="388" y="346" text-anchor="middle">shared terms; check</text><text x="388" y="362" text-anchor="middle">judge's quotes</text>
+    <text x="540" y="330" text-anchor="middle">category from</text><text x="540" y="346" text-anchor="middle">config/tools.json;</text><text x="540" y="362" text-anchor="middle">step, time, cost limits</text>
+    <text x="692" y="330" text-anchor="middle">irreversible = card;</text><text x="692" y="346" text-anchor="middle">approve, edit, skip,</text><text x="692" y="362" text-anchor="middle">undo run in code</text>
+    <text x="852" y="330" text-anchor="middle">SMTP to test inbox,</text><text x="852" y="346" text-anchor="middle">IMAP confirms;</text><text x="852" y="362" text-anchor="middle">public space: outbox</text>
+  </g>
+
+  <g font-family="system-ui, sans-serif" font-size="13" fill="#17233F">
+    <rect x="168" y="408" width="760" height="40" rx="6" fill="#E9EEF6" stroke="#C9D3E3"/>
+    <text x="548" y="433" text-anchor="middle">Trace of every step, stop reason when Lafaz gives up, eval of 4 measures from the same database</text>
+  </g>
+</svg>
