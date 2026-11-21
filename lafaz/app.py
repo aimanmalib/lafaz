@@ -53,6 +53,11 @@ def create_app() -> FastAPI:
             response.headers["Cache-Control"] = "no-cache, no-transform"
         return response
 
+    @app.get("/favicon.ico", include_in_schema=False)
+    def favicon():
+        from fastapi.responses import FileResponse
+        return FileResponse(STATIC_DIR / "favicon.ico", media_type="image/x-icon")
+
     @app.get("/healthz")
     def healthz() -> JSONResponse:
         ok = db.healthy()
