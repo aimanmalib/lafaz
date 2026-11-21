@@ -57,14 +57,18 @@ def get(conn: sqlite3.Connection, decision_id: int) -> sqlite3.Row:
 
 
 def candidates(conn: sqlite3.Connection, decision_id: int) -> list[tuple[sqlite3.Row, list[str]]]:
-    """Active decisions from other runs sharing at least `min_shared_terms` terms, most shared first."""
+    """Active decisions from other runs sharing at least `min_shared_terms` terms, most shared first.
+
+    A run of the very same meeting text (a sample tried twice) restates its decisions; it never contradicts them.
+    """
     cfg = _cfg()
     new = get(conn, decision_id)
     mine = set(new["topic"].split())
     scored = []
     for old in conn.execute(
         "SELECT d.*, m.text AS meeting_text, m.meeting_date FROM decisions d JOIN meetings m ON m.id = d.meeting_id"
-        " WHERE d.status='active' AND d.run_id != ? AND d.id < ?", (new["run_id"], decision_id),
+        " WHERE d.status='active' AND d.run_id != ? AND d.id < ? AND m.text != ?",
+        (new["run_id"], decision_id, new["meeting_text"]),
     ):
         shared = sorted(mine & set(old["topic"].split()))
         if len(shared) >= cfg["min_shared_terms"]:

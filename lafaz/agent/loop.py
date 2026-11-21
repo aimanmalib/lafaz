@@ -50,10 +50,11 @@ class Budget:
 
 
 def start_run(conn: sqlite3.Connection, text: str, meeting_date: date, source: str, lang: str,
-              title: str | None = None, mode: str = "live") -> int:
+              title: str | None = None, mode: str = "live", client_key: str | None = None) -> int:
     cur = conn.execute("INSERT INTO meetings (meeting_date, title, source, text) VALUES (?,?,?,?)",
                        (meeting_date.isoformat(), title, source, text))
-    run = conn.execute("INSERT INTO runs (meeting_id, mode, lang) VALUES (?,?,?)", (cur.lastrowid, mode, lang))
+    run = conn.execute("INSERT INTO runs (meeting_id, mode, lang, client_key) VALUES (?,?,?,?)",
+                       (cur.lastrowid, mode, lang, client_key))
     conn.commit()
     return run.lastrowid
 

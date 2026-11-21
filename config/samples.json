@@ -5,7 +5,8 @@
       "id": "standup-synthetic-1",
       "source": "synthetic",
       "meeting_date": "2026-11-21",
-      "text": "Aina: Okay quick one. We agreed last week the beta goes out on the 28th, but actually, no, let's move the beta to the 5th of December, the payment page is not ready.\nFaris: Fine. I'll fix the payment page by Wednesday.\nAina: And someone needs to tell the pilot schools about the new date. Um, Mei, can you draft that email?\nMei: Sure, I can draft it tomorrow. Do we still want the Friday demo with the ministry?\nAina: Not sure yet. Let's ask the team."
+      "text": "Aina: Okay quick one. We agreed last week the beta goes out on the 28th, but actually, no, let's move the beta to the 5th of December, the payment page is not ready.\nFaris: Fine. I'll fix the payment page by Wednesday.\nAina: And someone needs to tell the pilot schools about the new date. Um, Mei, can you draft that email?\nMei: Sure, I can draft it tomorrow. Do we still want the Friday demo with the ministry?\nAina: Not sure yet. Let's ask the team.",
+      "replay": "evals/replay/standup-synthetic-1.json"
     }
   ]
 }

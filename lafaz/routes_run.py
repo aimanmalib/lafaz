@@ -13,7 +13,7 @@ from fastapi import APIRouter, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from starlette.exceptions import HTTPException
 
-from . import config, db, runner
+from . import budget, config, db, replay, runner
 from .agent import gate, loop
 from .agent.context import ActionError
 from .memory import conflicts
@@ -41,15 +41,21 @@ def start(request: Request, text: str = Form(""), meeting_date: str = Form(""), 
         day = date.fromisoformat(meeting_date) if meeting_date else date.fromisoformat(today())
     except ValueError:
         return _home_error(request, text, meeting_date, "run.bad_date", 422)
-    if not runner.live_available():
-        return _home_error(request, text, meeting_date, "run.not_live", 503)
+    text = replay.normalise(text)
     lang = context(request)["lang"]
+    key = budget.client_key(request)
     conn = db.connect()
     try:
-        run_id = loop.start_run(conn, text, day, source if source in SOURCES else "wispr", lang)
+        refused = budget.refusal(conn, key) if runner.live_available() else "run.not_live"
+        cassette = replay.find(text, day) if refused else None
+        if refused and cassette is None:
+            return _home_error(request, text, meeting_date, refused, 503)
+        mode = "replay" if cassette else "live"
+        run_id = loop.start_run(conn, text, day, source if source in SOURCES else "wispr", lang, mode=mode,
+                                client_key=key)
     finally:
         conn.close()
-    runner.launch(run_id, text, day)
+    runner.launch(run_id, text, day, llm=replay.llm_for(cassette) if cassette else None)
     return RedirectResponse(f"/run/{run_id}", status_code=303)
 
 

@@ -11,7 +11,7 @@ SCHEMA = Path(__file__).with_name("schema.sql")
 
 # Columns added after a table first shipped. ADD COLUMN never rebuilds a table, so existing rows stay as they are.
 ADDED_COLUMNS = {
-    "runs": {"handoff_json": "TEXT", "cost_usd": "REAL", "finished_at": "TEXT"},
+    "runs": {"handoff_json": "TEXT", "cost_usd": "REAL", "finished_at": "TEXT", "client_key": "TEXT"},
     "steps": {"status": "TEXT", "approval_id": "INTEGER", "undo_json": "TEXT"},
     "outbox": {"policy_id": "INTEGER", "label": "TEXT"},
 }

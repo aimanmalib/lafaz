@@ -1,7 +1,7 @@
 """Start a run in a worker thread so the page can show progress instead of holding a request open for a minute.
 
-Live runs need the model key in the environment (name in config llm.key_env). Without it the public site plans
-nothing live (PRD 4.10: replay mode). A run left 'started' by a restart is closed as 'interrupted' at start-up.
+Live runs need the model key in the environment (name in config llm.key_env). Without it, or once the public budget
+is spent, only a recorded sample can run, as a replay (PRD 4.10, lafaz.replay). A run left 'started' by a restart is closed as 'interrupted' at start-up.
 """
 
 from __future__ import annotations
@@ -38,11 +38,11 @@ def _stop(conn, run_id: int, reason: str) -> None:
     conn.commit()
 
 
-def launch(run_id: int, text: str, meeting_date: date) -> None:
+def launch(run_id: int, text: str, meeting_date: date, llm: LLM | None = None) -> None:
     def work() -> None:
         conn = db.connect()
         try:
-            loop.run(conn, run_id, text, meeting_date, llm=make_llm())
+            loop.run(conn, run_id, text, meeting_date, llm=llm or make_llm())
         except Exception:  # noqa: BLE001 - a bug must end the run visibly, not leave it spinning
             log.exception("run %s failed", run_id)
             _stop(conn, run_id, "internal_error")

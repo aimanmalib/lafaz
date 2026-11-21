@@ -96,7 +96,7 @@ def test_replace_supersedes_and_undo_restores(conn):
     assert out.status == "executed" and out.category == "reversible"
     old = conn.execute("SELECT status, superseded_by FROM decisions WHERE id=1").fetchone()
     assert tuple(old) == ("superseded", 2)
-    third = meeting(conn, NEW_TEXT, D2, [NEW])
+    third = meeting(conn, NEW_TEXT + "\nAina: Thanks, all.", D2, [NEW])
     assert [d["id"] for d, _ in decisions.candidates(conn, decisions.save_run(conn, third)[0])] == [2]
     gate.undo(conn, run_id, out.seq)
     assert conn.execute("SELECT status FROM decisions WHERE id=1").fetchone()[0] == "active"
@@ -142,3 +142,11 @@ def test_unknown_choice_is_refused(conn):
     second(conn, judge())
     with pytest.raises(ActionError, match="unknown_choice"):
         conflicts.resolve(conn, card(conn)["id"], "delete")
+
+
+def test_the_same_meeting_text_again_is_not_a_conflict(conn):
+    """A sample tried twice restates its decisions; judging them against each other only adds noise."""
+    first = decisions.save_run(conn, meeting(conn, NEW_TEXT, D2, [NEW]))[0]
+    again = meeting(conn, NEW_TEXT, D2, [NEW])
+    found = [d["id"] for d, _ in decisions.candidates(conn, decisions.save_run(conn, again)[0])]
+    assert first not in found and found  # the older, different meeting is still a candidate

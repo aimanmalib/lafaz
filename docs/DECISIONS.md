@@ -165,3 +165,22 @@ Short records of choices made while building Lafaz. Newest last. Each one says w
   weekday with a date resolves only when both agree).
 - The results commit is recorded; `+uncommitted` is added when code, config, prompts or tasks differ from it.
 - Undo: remove `app.include_router(eval_router)` and the `eval` block in `config/lafaz.json`; nothing else reads them.
+
+## D12. Public limits and replay mode (21 Nov, 20:30 MYT)
+
+- What: live runs on the public site stop at `public_budget.usd_per_day` (a run in progress counts at
+  `run_limits.max_cost_usd`) and at `public_budget.runs_per_ip_per_day` per visitor, both per UTC day
+  (`lafaz/budget.py`). The visitor address comes from `cf-connecting-ip` only when the hop the host proxy saw is in
+  `public_budget.cloudflare_ranges`; it is stored as a 16-character hash of day and address, never raw.
+- Replay: without a key, or once a limit is reached, a sample with a cassette (`replay` in `config/samples.json`,
+  file in `evals/replay/`) still runs. The cassette holds the model's responses from one real run; `lafaz/replay.py`
+  hands them to the real loop, so the quote checker, dates, gate, approvals and actions all run as they do live. The
+  run is stored with mode `replay`, costs nothing and says so on the run page. It plays only for the exact text and
+  meeting date it was recorded for (line breaks normalised); anything else gets a notice and is not stored.
+- Ids: rows made during a replay get new ids. The ids the model saw in recorded tool results are matched with this
+  run's results, and later recorded tool inputs (`*_id`, `*_ids`) are rewritten, so a recorded answer never points
+  at another run's rows. A request the recording cannot answer fails as `model_error:replay_unrecorded`.
+- Memory: a decision from a meeting with the very same text is not a conflict candidate. Without this, every second
+  try of a sample would ask the model to judge a decision against itself.
+- Record again after a prompt, tool or sample change: `python -m lafaz.replay record <sample-id>` with the key set.
+- Undo: delete `evals/replay/` and the `replay` field; the site falls back to the "not live" notice.
