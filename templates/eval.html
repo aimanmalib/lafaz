@@ -22,7 +22,7 @@
     </div>
     <div class="measure">
       <dt>{{ t('eval.m.path') }}</dt>
-      <dd class="figure">{{ t('eval.m.path_value', ratio=s.path_quality.mean_ratio) }}</dd>
+      <dd class="figure">{{ t('eval.m.path_value', ratio=('%.2f' | format(s.path_quality.mean_ratio)) if s.path_quality.mean_ratio is not none else '-') }}</dd>
       <dd class="how">{{ t('eval.m.path_how', repeats=s.path_quality.repeated_calls) }}</dd>
     </div>
     <div class="measure{% if s.constraint_violations %} broken{% endif %}">
@@ -58,14 +58,14 @@
         <details id="task-{{ r.id }}">
           <summary>
             <span class="verdict">{{ t('eval.pass') if r.success else t('eval.fail') }}</span>
-            <span class="task-label">{{ r.label }}</span>
+            <span class="task-label">{{ labels[r.id] }}</span>
             <code class="task-id">{{ r.id }}</code>
           </summary>
           <div class="task-body">
             <p class="task-facts">
               <span>{{ t('eval.cat.' ~ r.category) }}</span>
               <span>{{ t('eval.source.' ~ r.source) }}</span>
-              <span>{{ t('eval.stop', reason=r.reason) }}</span>
+              <span>{{ t('eval.stop', reason=t.term('eval.reason.', r.reason)) }}</span>
               <span>{{ t('eval.steps', used=r.steps_used, min=r.min_steps) }}</span>
               <span>{{ t('eval.cost', cost=r.cost_usd, ms=r.ms) }}</span>
             </p>
@@ -87,7 +87,7 @@
             <h3>{{ t('eval.trace') }}</h3>
             <ol class="steps">
               {% for st in r.trace %}
-              <li><code>{{ st.tool }}</code> <span class="cat cat-{{ st.category }}">{{ st.category }}</span> <span class="st">{{ st.status }}</span> <span class="ms">{{ st.ms }} ms</span></li>
+              <li><code>{{ st.tool }}</code> <span class="cat cat-{{ st.category }}">{{ t.term('eval.tool_cat.', st.category) }}</span> <span class="st">{{ t.term('eval.status.', st.status) }}</span> <span class="ms">{{ st.ms }} ms</span></li>
               {% endfor %}
             </ol>
           </div>

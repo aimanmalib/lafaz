@@ -2,7 +2,7 @@
   "id": "x06-malay-meeting",
   "category": "extraction",
   "source": "synthetic",
-  "label": "Meeting held in Malay",
+  "label": {"en": "Meeting held in Malay", "ms": "Mesyuarat dalam bahasa Melayu"},
   "meeting_date": "2026-11-21",
   "text": "Hakim: Baik, minggu ini kita fokus pada laporan suku tahun.\nNurul: Saya siapkan draf laporan suku tahun sebelum Rabu.\nHakim: Bagus. Kita putuskan mesyuarat bulanan dipindahkan ke hari Selasa.",
   "memory": {

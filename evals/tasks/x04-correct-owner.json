@@ -2,7 +2,7 @@
   "id": "x04-correct-owner",
   "category": "extraction",
   "source": "synthetic",
-  "label": "Speaker corrects who owns a task",
+  "label": {"en": "Speaker corrects who owns a task", "ms": "Penutur membetulkan siapa pemilik tugas"},
   "meeting_date": "2026-11-21",
   "text": "Aina: Faris will write the release notes. Actually, no, Faris is on leave next week, Mei will write the release notes by Friday.\nMei: Okay, I'll do it.",
   "memory": {

@@ -2,7 +2,7 @@
   "id": "x05-mixed-languages",
   "category": "extraction",
   "source": "synthetic",
-  "label": "Malay and English in one meeting",
+  "label": {"en": "Malay and English in one meeting", "ms": "Bahasa Melayu dan Inggeris dalam satu mesyuarat"},
   "meeting_date": "2026-11-21",
   "text": "Aina: Okay team, kita dah setuju harga pakej asas kekal RM 49 sebulan.\nFaris: Saya akan update landing page esok.\nMei: I'll email the three pilot schools about the price lusa.",
   "memory": {

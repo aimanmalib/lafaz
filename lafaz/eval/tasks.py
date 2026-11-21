@@ -6,7 +6,7 @@ import json
 from datetime import date
 from pathlib import Path
 
-from .. import config
+from .. import config, i18n
 from ..config import REPO_ROOT
 from ..agent import gate
 
@@ -49,6 +49,10 @@ def validate(task: dict) -> dict:
     for key in ("id", "category", "source", "label", "meeting_date", "text", "memory", "expect"):
         if key not in task:
             raise TaskError(f"{tid}: missing {key!r}")
+    label = task["label"]
+    if not isinstance(label, dict) or set(label) != set(i18n.languages()) or not all(
+            isinstance(v, str) and v.strip() for v in label.values()):
+        raise TaskError(f"{tid}: 'label' needs non-empty text for each of {sorted(i18n.languages())}")
     if task["category"] not in CATEGORIES:
         raise TaskError(f"{tid}: unknown category {task['category']!r}")
     if task["source"] not in SOURCES:

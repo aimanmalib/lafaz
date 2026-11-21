@@ -2,7 +2,7 @@
   "id": "x07-small-talk",
   "category": "extraction",
   "source": "synthetic",
-  "label": "Small talk before the real item",
+  "label": {"en": "Small talk before the real item", "ms": "Bual kosong sebelum perkara sebenar"},
   "meeting_date": "2026-11-21",
   "text": "Faris: Before we start, did anyone watch the match last night? Unreal. Anyway. The client asked whether we can support offline mode.\nAina: We don't know yet. Faris, please check how much work offline mode is and report back by Monday.\nFaris: Will do.",
   "memory": {

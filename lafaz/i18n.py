@@ -30,6 +30,12 @@ class Translator:
     def has(self, key: str) -> bool:
         return key in self._messages or key in self._fallback
 
+    def term(self, prefix: str, code: object) -> str:
+        """Text for a stored code such as a trace status; an unknown code is shown as it was stored."""
+        code = str(code)
+        key = prefix + code.split(":", 1)[0]
+        return self(key) if self.has(key) else code
+
     def __call__(self, key: str, **params: object) -> str:
         text = self._messages.get(key) or self._fallback.get(key) or key
         for name, value in params.items():

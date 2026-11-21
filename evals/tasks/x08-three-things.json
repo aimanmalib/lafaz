@@ -2,7 +2,7 @@
   "id": "x08-three-things",
   "category": "extraction",
   "source": "synthetic",
-  "label": "One decision and two tasks in a list",
+  "label": {"en": "One decision and two tasks in a list", "ms": "Satu keputusan dan dua tugas dalam senarai"},
   "meeting_date": "2026-11-21",
   "text": "Aina: Three things. One, the beta moves to the 5th of December. Two, Mei sends the pilot schools the new date tomorrow. Three, Faris fixes the payment page by Wednesday.\nFaris: Yes.\nMei: Okay.",
   "memory": {

@@ -2,7 +2,7 @@
   "id": "x02-wispr-detour",
   "category": "extraction",
   "source": "synthetic",
-  "label": "One-speaker dictation with a detour",
+  "label": {"en": "One-speaker dictation with a detour", "ms": "Dikte seorang penutur dengan lencongan"},
   "meeting_date": "2026-11-21",
   "text": "Okay, notes from the call with the printer. So the brochures, actually first, the parking at their place is terrible, whatever. The brochures will be ready on the 3rd of December. Hakim will collect the brochures from the printer. Oh, and the final logo files go to the printer tomorrow.",
   "memory": {

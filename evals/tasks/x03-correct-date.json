@@ -2,7 +2,7 @@
   "id": "x03-correct-date",
   "category": "extraction",
   "source": "synthetic",
-  "label": "Speaker corrects a date",
+  "label": {"en": "Speaker corrects a date", "ms": "Penutur membetulkan tarikh"},
   "meeting_date": "2026-11-21",
   "text": "Mei: The workshop is on Thursday, no wait, sorry, the workshop is on Friday the 27th.\nDanial: Got it. I'll book the training room for Friday.\nMei: Thanks, Danial.",
   "memory": {

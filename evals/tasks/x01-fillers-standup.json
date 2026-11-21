@@ -2,7 +2,7 @@
   "id": "x01-fillers-standup",
   "category": "extraction",
   "source": "synthetic",
-  "label": "Stand-up full of fillers",
+  "label": {"en": "Stand-up full of fillers", "ms": "Mesyuarat ringkas penuh kata pengisi"},
   "meeting_date": "2026-11-21",
   "text": "Aina: Um, okay, so, like, quick update. Faris, you know, can you, uh, finish the invoice export by Wednesday?\nFaris: Yeah, yeah, I'll finish the invoice export by Wednesday.\nAina: Great. And, um, we decided the office stays closed on Monday for the public holiday.",
   "memory": {

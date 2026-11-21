@@ -12,7 +12,7 @@ from lafaz.eval.__main__ import main, run_all, save
 from lafaz.llm import LLM
 
 TASK = {
-    "id": "t01-sample", "category": "extraction", "source": "synthetic", "label": "Sample",
+    "id": "t01-sample", "category": "extraction", "source": "synthetic", "label": {"en": "Sample", "ms": "Contoh"},
     "meeting_date": "2026-11-21",
     "text": "Faris: I'll fix the payment page by Wednesday.\nAina: Tell everyone the plan.",
     "memory": {"people": [{"name": "Faris", "aliases": [], "email": None}], "meetings": []},

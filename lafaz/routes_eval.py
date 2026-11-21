@@ -11,6 +11,7 @@ from pathlib import Path
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 
+from . import i18n
 from .eval import tasks
 from .web import context, render
 
@@ -29,7 +30,28 @@ def latest(folder: Path | None = None) -> tuple[dict | None, str | None]:
     return None, None
 
 
+def labels(result: dict | None, lang: str) -> dict[str, str]:
+    """Task id -> label in `lang`. Rows saved before labels were bilingual hold one string; for those the label
+    comes from the task file with the same id, and the stored string is the last resort."""
+    rows = (result or {}).get("tasks", [])
+    files = {}
+    if any(not isinstance(r.get("label"), dict) for r in rows):
+        try:
+            files = {t["id"]: t["label"] for t in tasks.load()}
+        except (OSError, ValueError):
+            files = {}
+    found = {}
+    for r in rows:
+        label = r.get("label") if isinstance(r.get("label"), dict) else files.get(r["id"], r.get("label"))
+        if isinstance(label, dict):
+            label = label.get(lang) or label.get(i18n.default_lang()) or r["id"]
+        found[r["id"]] = label or r["id"]
+    return found
+
+
 @router.get("/eval", response_class=HTMLResponse)
 def eval_page(request: Request) -> HTMLResponse:
     result, name = latest()
-    return render("eval.html", context(request, result=result, results_name=name))
+    ctx = context(request, result=result, results_name=name)
+    ctx["labels"] = labels(result, ctx["lang"])
+    return render("eval.html", ctx)
