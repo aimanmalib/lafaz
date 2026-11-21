@@ -217,3 +217,14 @@ Short records of choices made while building Lafaz. Newest last. Each one says w
   summary and its sending stay where they already are: `preview_summary` and the irreversible `send_summary` inside a
   run. The board itself never sends anything. Undo: remove `routes_board` from `lafaz/app.py`.
 - **Exports:** CSV and JSON with the fields listed in `config/board.json`. Jira and Linear connectors are not built.
+
+## D15. Eval at 24 tasks: conflicts, designed stops, per-task limits (21 Nov, 23:20 MYT)
+
+- **Mix from PRD 4.9:** 12 extraction, 6 conflict, 4 give-up, 2 adversarial. Two conflict tasks expect no conflict (a
+  detail added, a separate review day), so the judge is scored on false alarms as well as catches.
+- **Give-up tasks are real stops, not prompts asking to stop:** two Alis in memory (the code refuses to guess the owner),
+  "the 31st of November" (the date code finds no such day), and two limit stops. A task may carry `limits`, a partial
+  override of `run_limits` for that run only; the live app never passes it. The cost-limit task depends on per-run
+  cost, so it can move between runs; a fail is reported as measured, not hidden.
+- **Not done:** no `wispr-sebenar` task yet (no dictation from the owner had arrived when this was written), and the
+  naive single-prompt baseline (T1) is cut under PRD 3.3. Undo: delete the new task files; `limits` is ignored when absent.
